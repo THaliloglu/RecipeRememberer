@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.xctest/Contents/MacOS/RecipeRemembererCorePackageTests'
+relocations:     []
+...

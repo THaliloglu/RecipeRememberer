@@ -1,0 +1,758 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.xctest/Contents/MacOS/RecipeRemembererCorePackageTests",
+      "packagePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore",
+      "productName" : "RecipeRemembererCorePackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.RecipeRemembererCore-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/sources",
+      "importPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/DuplicateRecipeDetector.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeCatalogEntry.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeMatcher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeNormalizer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SampleRecipeCatalog.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SavedRecipeSnapshot.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "RecipeRemembererCore",
+      "moduleOutputPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCore.swiftmodule",
+      "objects" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/include/RecipeRemembererCore-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "reciperememberercore",
+        "-disable-sandbox"
+      ],
+      "outputFileMapPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCore.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/DuplicateRecipeDetector.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeCatalogEntry.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeMatcher.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeNormalizer.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SampleRecipeCatalog.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SavedRecipeSnapshot.swift"
+      ],
+      "tempsPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.RecipeRemembererCorePackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/sources",
+      "importPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCoreTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "RecipeRemembererCorePackageTests",
+      "moduleOutputPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCorePackageTests.swiftmodule",
+      "objects" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/include/RecipeRemembererCorePackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "reciperememberercore",
+        "-disable-sandbox"
+      ],
+      "outputFileMapPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCorePackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.RecipeRemembererCoreTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/sources",
+      "importPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/DuplicateRecipeDetectorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/RecipeMatcherTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCore.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "RecipeRemembererCoreTests",
+      "moduleOutputPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCoreTests.swiftmodule",
+      "objects" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/DuplicateRecipeDetectorTests.swift.o",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/RecipeMatcherTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "reciperememberercore",
+        "-disable-sandbox"
+      ],
+      "outputFileMapPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/DuplicateRecipeDetectorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/RecipeMatcherTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules/RecipeRemembererCoreTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/DuplicateRecipeDetectorTests.swift",
+        "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/RecipeMatcherTests.swift"
+      ],
+      "tempsPath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "RecipeRemembererCore" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "RecipeRemembererCore",
+      "-package-name",
+      "reciperememberercore",
+      "-c",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/DuplicateRecipeDetector.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeCatalogEntry.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeMatcher.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeNormalizer.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SampleRecipeCatalog.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SavedRecipeSnapshot.swift",
+      "-I",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/include/RecipeRemembererCore-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "reciperememberercore",
+      "-disable-sandbox",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "RecipeRemembererCorePackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "RecipeRemembererCorePackageTests",
+      "-package-name",
+      "reciperememberercore",
+      "-c",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift",
+      "-I",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/include/RecipeRemembererCorePackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "reciperememberercore",
+      "-disable-sandbox",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "RecipeRemembererCoreTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "RecipeRemembererCoreTests",
+      "-package-name",
+      "reciperememberercore",
+      "-c",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/DuplicateRecipeDetectorTests.swift",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/RecipeMatcherTests.swift",
+      "-I",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "reciperememberercore",
+      "-disable-sandbox",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "RecipeRemembererCore" : [
+
+    ],
+    "RecipeRemembererCorePackageTests" : [
+      "RecipeRemembererCoreTests",
+      "RecipeRemembererCore"
+    ],
+    "RecipeRemembererCoreTests" : [
+      "RecipeRemembererCore"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/DuplicateRecipeDetector.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeCatalogEntry.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeMatcher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeNormalizer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SampleRecipeCatalog.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SavedRecipeSnapshot.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/sources"
+    },
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/sources"
+    },
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/DuplicateRecipeDetectorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/RecipeMatcherTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCorePackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/DuplicateRecipeDetectorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/RecipeMatcherTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/sources"
+    },
+    "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

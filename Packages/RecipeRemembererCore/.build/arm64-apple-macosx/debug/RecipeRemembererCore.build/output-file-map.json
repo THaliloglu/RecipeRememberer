@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/master.swiftdeps"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/DuplicateRecipeDetector.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/DuplicateRecipeDetector.dia"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeCatalogEntry.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeCatalogEntry.dia"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeMatcher.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeMatcher.dia"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/RecipeNormalizer.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/RecipeNormalizer.dia"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SampleRecipeCatalog.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SampleRecipeCatalog.dia"
+  },
+  "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Sources/RecipeRemembererCore/SavedRecipeSnapshot.swift": {
+    "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.d",
+    "object": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.swift.o",
+    "swiftmodule": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot~partial.swiftmodule",
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.swiftdeps",
+    "diagnostics": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCore.build/SavedRecipeSnapshot.dia"
+  }
+}
