@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OY-mMb">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="Y6W-OY-mMb" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchMark" translatesAutoresizingMaskIntoConstraints="NO" id="2nD-rA-s4p">
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="2nD-rA-s4p" secondAttribute="height" multiplier="1:1" id="J4Q-XD-v12"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recipe Rememberer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S7g-Zf-3QV">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
+                        <color key="backgroundColor" red="0.96470588240000003" green="0.83137254900000002" blue="0.43137254900000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="2nD-rA-s4p" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="2Qv-uQ-jIA"/>
+                            <constraint firstItem="2nD-rA-s4p" firstAttribute="centerY" secondItem="Bcu-3y-fUS" secondAttribute="centerY" constant="-34" id="6Ek-gw-THN"/>
+                            <constraint firstItem="S7g-Zf-3QV" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="D3J-LM-qeD"/>
+                            <constraint firstItem="S7g-Zf-3QV" firstAttribute="top" secondItem="2nD-rA-s4p" secondAttribute="bottom" constant="28" id="HHs-03-KpT"/>
+                            <constraint firstItem="2nD-rA-s4p" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.42" id="L4r-fv-8QF"/>
+                            <constraint firstItem="2nD-rA-s4p" firstAttribute="width" relation="lessThanOrEqual" constant="320" id="NwY-iP-z2x"/>
+                            <constraint firstItem="2nD-rA-s4p" firstAttribute="width" relation="greaterThanOrEqual" constant="184" id="gNo-y0-vE4"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53.846153846153847" y="375.11848341232225"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="LaunchMark" width="1024" height="1024"/>
+    </resources>
+</document>

@@ -17,7 +17,7 @@ struct LiveReferenceStatusSection: View {
             }
         }
         .padding()
-        .glassBackgroundEffect()
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: 24))
     }
 }
 

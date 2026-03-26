@@ -9,7 +9,7 @@ struct PendingSaveCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Save New Recipe?")
+            Text("Save Recipe")
                 .font(.headline)
 
             Text(draft.title)
@@ -24,8 +24,10 @@ struct PendingSaveCard: View {
                     .foregroundStyle(.secondary)
             }
 
-            Text("Source: \(draft.sourceDescription)")
-                .foregroundStyle(.secondary)
+            if draft.sampleImageData != nil {
+                Text("This save will also store a local comparison sample so future recipe photos can be matched visually.")
+                    .foregroundStyle(.secondary)
+            }
 
             HStack {
                 Button("Save Recipe", systemImage: "square.and.arrow.down") {
@@ -40,6 +42,6 @@ struct PendingSaveCard: View {
             }
         }
         .padding()
-        .glassBackgroundEffect()
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: 24))
     }
 }

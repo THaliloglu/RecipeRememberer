@@ -10,4 +10,11 @@ public enum RecipeNormalizer {
 
         return folded.lowercased()
     }
+
+    public static func normalizedTokens(for value: String) -> [String] {
+        normalizedKey(for: value)
+            .split(separator: " ")
+            .map(String.init)
+            .filter { $0.count > 1 }
+    }
 }

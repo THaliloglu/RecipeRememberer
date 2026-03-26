@@ -37,3 +37,25 @@ func duplicateDetectorMatchesOnNormalizedTitle() {
 
     #expect(isDuplicate)
 }
+
+@Test
+func duplicateDetectorFindsSavedRecipeFromOCRTitleTokens() {
+    let savedRecipes = [
+        SavedRecipeSnapshot(
+            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
+            hellofreshCode: nil
+        ),
+    ]
+
+    let match = DuplicateRecipeDetector.bestTitleMatch(
+        for: """
+        HELLO FRESH
+        Italienisches Gratin mit Bio Rinderhackfleisch
+        Kartoffeln und Porree
+        """,
+        among: savedRecipes
+    )
+
+    #expect(match?.title == "Italienisches Gratin mit Bio-Rinderhackfleisch")
+}

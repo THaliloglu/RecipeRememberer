@@ -20,7 +20,7 @@ struct RecognitionFeedbackCard: View {
             Spacer(minLength: 0)
         }
         .padding()
-        .glassBackgroundEffect()
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: 24))
     }
 
     private var symbolName: String {

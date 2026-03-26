@@ -1,6 +1,6 @@
 {
   "": {
-    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/master.swiftdeps"
+    "swift-dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/primary.swiftdeps"
   },
   "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/Tests/RecipeRemembererCoreTests/DuplicateRecipeDetectorTests.swift": {
     "dependencies": "/Users/thaliloglu/Developer/projects/RecipeRememberer/Packages/RecipeRemembererCore/.build/arm64-apple-macosx/debug/RecipeRemembererCoreTests.build/DuplicateRecipeDetectorTests.d",

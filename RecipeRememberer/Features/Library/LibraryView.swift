@@ -14,7 +14,7 @@ struct LibraryView: View {
                 ContentUnavailableView(
                     "No Saved Recipes",
                     systemImage: "square.stack.3d.down.forward",
-                    description: Text("Recognize a HelloFresh card in the scanner or import a recipe photo to start building your local library.")
+                    description: Text("Scan a HelloFresh recipe title in the scanner to start building your local library.")
                 )
             } else {
                 List(filteredRecipes) { recipe in

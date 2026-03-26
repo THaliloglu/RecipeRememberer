@@ -20,14 +20,6 @@ struct RecipeRemembererApp: App {
             RootView()
                 .environment(appModel)
         }
-        .defaultSize(width: 960, height: 720)
-        .modelContainer(modelContainer)
-
-        ImmersiveSpace(id: AppModel.immersiveSpaceID) {
-            RecipeScannerImmersiveView()
-                .environment(appModel)
-        }
-        .immersionStyle(selection: .constant(.mixed), in: .mixed)
         .modelContainer(modelContainer)
     }
 }
