@@ -1,0 +1,15 @@
+.DS_Store
+
+# Xcode
+DerivedData/
+build/
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+
+# SwiftPM
+.build/
+Packages/*/.build/
+
+# Simulator and local tooling
+*.log
