@@ -17,11 +17,6 @@ struct SavedRecipeRow: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if recipe.hasLearnedVisualSample {
-                    Text("Has local comparison sample")
-                        .foregroundStyle(.secondary)
-                }
-
                 Spacer()
 
                 Text(recipe.savedAt, format: .dateTime.month().day().year())

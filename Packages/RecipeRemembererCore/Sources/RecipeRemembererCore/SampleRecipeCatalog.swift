@@ -5,9 +5,6 @@ public enum SampleRecipeCatalog {
             title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
             subtitle: "Kartoffeln und Porree",
             hellofreshCode: "HF-DE-21",
-            referenceImageName: "ItalienischesGratinBioRinderhackfleisch",
-            cardWidthMeters: 0.1524,
-            cardHeightMeters: 0.2286,
             searchableTokens: [
                 "italienisches gratin",
                 "bio rinderhackfleisch",

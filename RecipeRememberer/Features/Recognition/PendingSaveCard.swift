@@ -24,11 +24,6 @@ struct PendingSaveCard: View {
                     .foregroundStyle(.secondary)
             }
 
-            if draft.sampleImageData != nil {
-                Text("This save will also store a local comparison sample so future recipe photos can be matched visually.")
-                    .foregroundStyle(.secondary)
-            }
-
             HStack {
                 Button("Save Recipe", systemImage: "square.and.arrow.down") {
                     appModel.confirmPendingSave(using: modelContext)
