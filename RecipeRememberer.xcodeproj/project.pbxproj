@@ -32,6 +32,7 @@
 		A00000490000000000000049 /* EditRecipeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001290000000000000129 /* EditRecipeSheet.swift */; };
 		A000004A000000000000004A /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012A000000000000012A /* AppStyle.swift */; };
 		A000004B000000000000004B /* RecipeCardTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012B000000000000012B /* RecipeCardTextParser.swift */; };
+		A000004C000000000000004C /* RecentScanHistorySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012C000000000000012C /* RecentScanHistorySection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		A00001290000000000000129 /* EditRecipeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeSheet.swift; sourceTree = "<group>"; };
 		A000012A000000000000012A /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		A000012B000000000000012B /* RecipeCardTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardTextParser.swift; sourceTree = "<group>"; };
+		A000012C000000000000012C /* RecentScanHistorySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentScanHistorySection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 				children = (
 					A00001270000000000000127 /* LocalLibraryNoticeCard.swift */,
 					A00001040000000000000104 /* ScannerDashboardView.swift */,
+					A000012C000000000000012C /* RecentScanHistorySection.swift */,
 					A00001280000000000000128 /* RecentSavedRecipesSection.swift */,
 					A00001070000000000000107 /* RecognitionFeedbackCard.swift */,
 					A00001080000000000000108 /* PendingSaveCard.swift */,
@@ -255,6 +258,7 @@
 				A00000420000000000000042 /* RecipeNormalizer.swift in Sources */,
 				A00000470000000000000047 /* LocalLibraryNoticeCard.swift in Sources */,
 				A00000140000000000000014 /* ScannerDashboardView.swift in Sources */,
+				A000004C000000000000004C /* RecentScanHistorySection.swift in Sources */,
 				A00000480000000000000048 /* RecentSavedRecipesSection.swift in Sources */,
 				A00000290000000000000029 /* ScanRecipeTitleSection.swift in Sources */,
 				A000002A000000000000002A /* LiveTitleScannerView.swift in Sources */,

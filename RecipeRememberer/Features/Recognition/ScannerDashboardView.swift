@@ -28,6 +28,8 @@ struct ScannerDashboardView: View {
 
                 PendingSaveCard()
 
+                RecentScanHistorySection(records: appModel.recentScanHistory)
+
                 RecentSavedRecipesSection()
             }
             .padding(.horizontal)

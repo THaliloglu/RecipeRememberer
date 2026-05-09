@@ -60,6 +60,17 @@ final class AppModel {
         let stage: TitleScanStage
     }
 
+    struct RecentScanRecord: Identifiable, Equatable {
+        let id = UUID()
+        let title: String
+        let subtitle: String
+        let hellofreshCode: String?
+        let message: String
+        let stage: TitleScanStage
+        let sourceDescription: String
+        let capturedAt: Date
+    }
+
     struct PendingRecipeDraft: Identifiable, Equatable {
         let id: String
         var title: String
@@ -126,6 +137,7 @@ final class AppModel {
     )
     var pendingRecipeDraft: PendingRecipeDraft?
     var librarySearchText = ""
+    var recentScanHistory: [RecentScanRecord] = []
 
     func scanRecipeTitle(using modelContext: ModelContext) {
         evaluateRecipeInput(
@@ -374,6 +386,14 @@ final class AppModel {
                 style: .warning,
                 recipeID: nil
             )
+            appendRecentScan(
+                title: "No Title Entered",
+                subtitle: "",
+                hellofreshCode: nil,
+                stage: .failed,
+                message: "Enter or capture a recipe title first.",
+                sourceDescription: source.description
+            )
             return
         }
 
@@ -403,6 +423,14 @@ final class AppModel {
                 recipeID: nil
             )
             pendingRecipeDraft = nil
+            appendRecentScan(
+                title: existingRecipe.title,
+                subtitle: existingRecipe.subtitle,
+                hellofreshCode: existingRecipe.hellofreshCode,
+                stage: .matchedSavedRecipe,
+                message: "Matched a recipe already saved in your library.",
+                sourceDescription: source.description
+            )
             return
         }
 
@@ -427,6 +455,14 @@ final class AppModel {
                 recipeID: nil
             )
             pendingRecipeDraft = nil
+            appendRecentScan(
+                title: existingRecipe.title,
+                subtitle: existingRecipe.subtitle,
+                hellofreshCode: existingRecipe.hellofreshCode,
+                stage: .matchedSavedRecipe,
+                message: "Matched a saved recipe from your capture.",
+                sourceDescription: source.description
+            )
             return
         }
 
@@ -452,6 +488,14 @@ final class AppModel {
                     recipeID: catalogMatch.id
                 )
                 pendingRecipeDraft = nil
+                appendRecentScan(
+                    title: existingRecipe.title,
+                    subtitle: existingRecipe.subtitle,
+                    hellofreshCode: existingRecipe.hellofreshCode,
+                    stage: .matchedSavedRecipe,
+                    message: "Matched a saved recipe after comparing with the known catalog.",
+                    sourceDescription: source.description
+                )
             } else {
                 let draft = PendingRecipeDraft(
                     entry: catalogMatch,
@@ -466,6 +510,14 @@ final class AppModel {
                     draft: draft,
                     using: modelContext,
                     requiresReview: source.requiresReview
+                )
+                appendRecentScan(
+                    title: draft.title,
+                    subtitle: draft.subtitle,
+                    hellofreshCode: draft.hellofreshCode,
+                    stage: .matchedCatalogRecipe,
+                    message: "Matched a known recipe and opened it for review.",
+                    sourceDescription: source.description
                 )
             }
             return
@@ -486,6 +538,14 @@ final class AppModel {
             draft: draft,
             using: modelContext,
             requiresReview: source.requiresReview
+        )
+        appendRecentScan(
+            title: draft.title,
+            subtitle: draft.subtitle,
+            hellofreshCode: draft.hellofreshCode,
+            stage: .newRecipe,
+            message: "No duplicate was found. This capture is ready to review and save.",
+            sourceDescription: source.description
         )
     }
 
@@ -614,5 +674,31 @@ final class AppModel {
 
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
+    }
+
+    private func appendRecentScan(
+        title: String,
+        subtitle: String,
+        hellofreshCode: String?,
+        stage: TitleScanStage,
+        message: String,
+        sourceDescription: String
+    ) {
+        recentScanHistory.insert(
+            RecentScanRecord(
+                title: title,
+                subtitle: subtitle,
+                hellofreshCode: hellofreshCode,
+                message: message,
+                stage: stage,
+                sourceDescription: sourceDescription,
+                capturedAt: .now
+            ),
+            at: 0
+        )
+
+        if recentScanHistory.count > 6 {
+            recentScanHistory.removeLast(recentScanHistory.count - 6)
+        }
     }
 }
