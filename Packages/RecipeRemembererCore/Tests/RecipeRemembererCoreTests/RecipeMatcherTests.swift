@@ -29,3 +29,15 @@ func recipeMatcherFindsGermanCatalogEntryFromOCRText() {
 
     #expect(match?.id == "italienisches-gratin-rinderhackfleisch")
 }
+
+@Test
+func recipeMatcherUsesSubtitleAndRecipeCodeSignals() {
+    let detectedText = """
+    parmesan and spinach
+    HF-3017
+    """
+
+    let match = RecipeMatcher.bestMatch(for: detectedText, in: SampleRecipeCatalog.entries)
+
+    #expect(match?.id == "one-pot-mushroom-rigatoni")
+}

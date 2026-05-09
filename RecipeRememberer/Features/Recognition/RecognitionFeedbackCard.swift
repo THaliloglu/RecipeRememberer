@@ -8,6 +8,7 @@ struct RecognitionFeedbackCard: View {
             Image(systemName: symbolName)
                 .font(.title2)
                 .foregroundStyle(iconStyle)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(feedback.title)
@@ -19,8 +20,9 @@ struct RecognitionFeedbackCard: View {
 
             Spacer(minLength: 0)
         }
-        .padding()
-        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: 24))
+        .padding(AppStyle.cardPadding)
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
+        .accessibilityElement(children: .combine)
     }
 
     private var symbolName: String {

@@ -26,6 +26,11 @@
 		A00000430000000000000043 /* SampleRecipeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001230000000000000123 /* SampleRecipeCatalog.swift */; };
 		A00000440000000000000044 /* SavedRecipeSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001240000000000000124 /* SavedRecipeSnapshot.swift */; };
 		A00000450000000000000045 /* DuplicateRecipeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001250000000000000125 /* DuplicateRecipeDetector.swift */; };
+		A00000460000000000000046 /* TitleScanStatusCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001260000000000000126 /* TitleScanStatusCard.swift */; };
+		A00000470000000000000047 /* LocalLibraryNoticeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001270000000000000127 /* LocalLibraryNoticeCard.swift */; };
+		A00000480000000000000048 /* RecentSavedRecipesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001280000000000000128 /* RecentSavedRecipesSection.swift */; };
+		A00000490000000000000049 /* EditRecipeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001290000000000000129 /* EditRecipeSheet.swift */; };
+		A000004A000000000000004A /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012A000000000000012A /* AppStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +55,11 @@
 		A00001230000000000000123 /* SampleRecipeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRecipeCatalog.swift; sourceTree = "<group>"; };
 		A00001240000000000000124 /* SavedRecipeSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipeSnapshot.swift; sourceTree = "<group>"; };
 		A00001250000000000000125 /* DuplicateRecipeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateRecipeDetector.swift; sourceTree = "<group>"; };
+		A00001260000000000000126 /* TitleScanStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleScanStatusCard.swift; sourceTree = "<group>"; };
+		A00001270000000000000127 /* LocalLibraryNoticeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLibraryNoticeCard.swift; sourceTree = "<group>"; };
+		A00001280000000000000128 /* RecentSavedRecipesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSavedRecipesSection.swift; sourceTree = "<group>"; };
+		A00001290000000000000129 /* EditRecipeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeSheet.swift; sourceTree = "<group>"; };
+		A000012A000000000000012A /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +121,7 @@
 			children = (
 				A00001000000000000000100 /* RecipeRemembererApp.swift */,
 				A00001010000000000000101 /* AppModel.swift */,
+				A000012A000000000000012A /* AppStyle.swift */,
 				A00001020000000000000102 /* RootView.swift */,
 			);
 			path = App;
@@ -133,24 +144,28 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
-		A000000C000000000000000C /* Library */ = {
-			isa = PBXGroup;
-			children = (
-				A00001050000000000000105 /* LibraryView.swift */,
-				A00001060000000000000106 /* SavedRecipeRow.swift */,
-			);
+			A000000C000000000000000C /* Library */ = {
+				isa = PBXGroup;
+				children = (
+					A00001290000000000000129 /* EditRecipeSheet.swift */,
+					A00001050000000000000105 /* LibraryView.swift */,
+					A00001060000000000000106 /* SavedRecipeRow.swift */,
+				);
 			path = Library;
 			sourceTree = "<group>";
 		};
-		A000000D000000000000000D /* Recognition */ = {
-			isa = PBXGroup;
-			children = (
-				A00001040000000000000104 /* ScannerDashboardView.swift */,
-				A00001070000000000000107 /* RecognitionFeedbackCard.swift */,
-				A00001080000000000000108 /* PendingSaveCard.swift */,
-				A00001180000000000000118 /* ScanRecipeTitleSection.swift */,
-				A00001190000000000000119 /* LiveTitleScannerView.swift */,
-			);
+			A000000D000000000000000D /* Recognition */ = {
+				isa = PBXGroup;
+				children = (
+					A00001270000000000000127 /* LocalLibraryNoticeCard.swift */,
+					A00001040000000000000104 /* ScannerDashboardView.swift */,
+					A00001280000000000000128 /* RecentSavedRecipesSection.swift */,
+					A00001070000000000000107 /* RecognitionFeedbackCard.swift */,
+					A00001080000000000000108 /* PendingSaveCard.swift */,
+					A00001180000000000000118 /* ScanRecipeTitleSection.swift */,
+					A00001190000000000000119 /* LiveTitleScannerView.swift */,
+					A00001260000000000000126 /* TitleScanStatusCard.swift */,
+				);
 			path = Recognition;
 			sourceTree = "<group>";
 		};
@@ -229,14 +244,19 @@
 				A00000130000000000000013 /* StoredRecipe.swift in Sources */,
 				A00000450000000000000045 /* DuplicateRecipeDetector.swift in Sources */,
 				A00000110000000000000011 /* AppModel.swift in Sources */,
+				A000004A000000000000004A /* AppStyle.swift in Sources */,
 				A00000120000000000000012 /* RootView.swift in Sources */,
 				A00000180000000000000018 /* PendingSaveCard.swift in Sources */,
+				A00000490000000000000049 /* EditRecipeSheet.swift in Sources */,
 				A00000160000000000000016 /* SavedRecipeRow.swift in Sources */,
 				A00000420000000000000042 /* RecipeNormalizer.swift in Sources */,
+				A00000470000000000000047 /* LocalLibraryNoticeCard.swift in Sources */,
 				A00000140000000000000014 /* ScannerDashboardView.swift in Sources */,
+				A00000480000000000000048 /* RecentSavedRecipesSection.swift in Sources */,
 				A00000290000000000000029 /* ScanRecipeTitleSection.swift in Sources */,
 				A000002A000000000000002A /* LiveTitleScannerView.swift in Sources */,
 				A00000430000000000000043 /* SampleRecipeCatalog.swift in Sources */,
+				A00000460000000000000046 /* TitleScanStatusCard.swift in Sources */,
 				A00000410000000000000041 /* RecipeMatcher.swift in Sources */,
 				A00000440000000000000044 /* SavedRecipeSnapshot.swift in Sources */,
 				A00000100000000000000010 /* RecipeRemembererApp.swift in Sources */,
@@ -382,7 +402,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecipeRememberer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reciperememberer.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -405,7 +425,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.RecipeRememberer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reciperememberer.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -10,6 +10,24 @@ final class AppModel {
         case automatic
 
         var id: String { rawValue }
+
+        var shortTitle: String {
+            switch self {
+            case .confirmFirst:
+                return "Ask First"
+            case .automatic:
+                return "Auto Save"
+            }
+        }
+
+        var detail: String {
+            switch self {
+            case .confirmFirst:
+                return "Review each detected recipe before saving."
+            case .automatic:
+                return "Save manual title matches immediately when possible."
+            }
+        }
     }
 
     enum FeedbackStyle {
@@ -44,9 +62,9 @@ final class AppModel {
 
     struct PendingRecipeDraft: Identifiable, Equatable {
         let id: String
-        let title: String
-        let subtitle: String
-        let hellofreshCode: String?
+        var title: String
+        var subtitle: String
+        var hellofreshCode: String?
         let sourceDescription: String
 
         init(
@@ -75,6 +93,29 @@ final class AppModel {
         }
     }
 
+    private enum ScanSource {
+        case manualEntry
+        case liveScanner
+
+        var description: String {
+            switch self {
+            case .manualEntry:
+                return "manual title entry"
+            case .liveScanner:
+                return "live title scanner"
+            }
+        }
+
+        var requiresReview: Bool {
+            switch self {
+            case .manualEntry:
+                return false
+            case .liveScanner:
+                return true
+            }
+        }
+    }
+
     var saveMode: SaveMode = .confirmFirst
     var latestFeedback: RecognitionFeedback?
     var titleScanInput = ""
@@ -87,25 +128,215 @@ final class AppModel {
     var librarySearchText = ""
 
     func scanRecipeTitle(using modelContext: ModelContext) {
-        scanRecipeTitle(titleScanInput, using: modelContext)
+        evaluateRecipeTitle(
+            titleScanInput,
+            source: .manualEntry,
+            using: modelContext
+        )
     }
 
-    func scanRecipeTitle(
+    func scanCapturedTitle(
+        _ capturedTitle: String,
+        using modelContext: ModelContext
+    ) {
+        evaluateRecipeTitle(
+            capturedTitle,
+            source: .liveScanner,
+            using: modelContext
+        )
+    }
+
+    func updatePendingDraft(
+        title: String? = nil,
+        subtitle: String? = nil,
+        hellofreshCode: String? = nil
+    ) {
+        guard var draft = pendingRecipeDraft else {
+            return
+        }
+
+        if let title {
+            draft.title = title
+        }
+
+        if let subtitle {
+            draft.subtitle = subtitle
+        }
+
+        if let hellofreshCode {
+            draft.hellofreshCode = normalizedOptionalField(hellofreshCode)
+        }
+
+        pendingRecipeDraft = draft
+    }
+
+    func confirmPendingSave(using modelContext: ModelContext) {
+        guard var draft = pendingRecipeDraft else {
+            return
+        }
+
+        draft.title = draft.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        draft.subtitle = draft.subtitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        draft.hellofreshCode = normalizedOptionalField(draft.hellofreshCode)
+
+        guard !draft.title.isEmpty else {
+            latestFeedback = RecognitionFeedback(
+                title: "Missing Recipe Title",
+                message: "Add or correct the recipe title before saving.",
+                style: .warning,
+                recipeID: draft.id
+            )
+            latestTitleScanResult = TitleScanResult(
+                title: "Recipe Title Needed",
+                message: "Review the detected recipe and add a title before saving it.",
+                stage: .failed
+            )
+            pendingRecipeDraft = draft
+            return
+        }
+
+        let savedRecipes = fetchStoredRecipes(using: modelContext)
+
+        if DuplicateRecipeDetector.isDuplicate(
+            title: draft.title,
+            subtitle: draft.subtitle,
+            hellofreshCode: draft.hellofreshCode,
+            among: savedRecipes.map(\.snapshot)
+        ) {
+            pendingRecipeDraft = nil
+            latestFeedback = RecognitionFeedback(
+                title: draft.title,
+                message: "This recipe is already saved in your local library.",
+                style: .warning,
+                recipeID: draft.id
+            )
+            latestTitleScanResult = TitleScanResult(
+                title: draft.title,
+                message: "Your edits still match an existing saved recipe, so nothing new was added.",
+                stage: .matchedSavedRecipe
+            )
+            return
+        }
+
+        saveDraft(draft, using: modelContext)
+    }
+
+    func dismissPendingSave() {
+        pendingRecipeDraft = nil
+    }
+
+    func renameRecipe(
+        _ recipe: StoredRecipe,
+        title: String,
+        subtitle: String,
+        hellofreshCode: String?,
+        using modelContext: ModelContext
+    ) -> Bool {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedSubtitle = subtitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedCode = normalizedOptionalField(hellofreshCode)
+
+        guard !trimmedTitle.isEmpty else {
+            latestFeedback = RecognitionFeedback(
+                title: "Rename Failed",
+                message: "Recipe titles cannot be empty.",
+                style: .warning,
+                recipeID: nil
+            )
+            return false
+        }
+
+        let savedRecipes = fetchStoredRecipes(using: modelContext)
+        let competingSnapshots = savedRecipes
+            .filter { $0.persistentModelID != recipe.persistentModelID }
+            .map(\.snapshot)
+
+        if DuplicateRecipeDetector.isDuplicate(
+            title: trimmedTitle,
+            subtitle: trimmedSubtitle,
+            hellofreshCode: normalizedCode,
+            among: competingSnapshots
+        ) {
+            latestFeedback = RecognitionFeedback(
+                title: trimmedTitle,
+                message: "That edit would duplicate another saved recipe.",
+                style: .warning,
+                recipeID: nil
+            )
+            return false
+        }
+
+        recipe.updateDetails(
+            title: trimmedTitle,
+            subtitle: trimmedSubtitle,
+            hellofreshCode: normalizedCode
+        )
+
+        do {
+            try modelContext.save()
+            latestFeedback = RecognitionFeedback(
+                title: trimmedTitle,
+                message: "Recipe details updated.",
+                style: .success,
+                recipeID: nil
+            )
+            return true
+        } catch {
+            latestFeedback = RecognitionFeedback(
+                title: trimmedTitle,
+                message: "The recipe was edited, but saving the changes failed.",
+                style: .warning,
+                recipeID: nil
+            )
+            return false
+        }
+    }
+
+    func deleteRecipe(
+        _ recipe: StoredRecipe,
+        using modelContext: ModelContext
+    ) {
+        let recipeTitle = recipe.title
+        modelContext.delete(recipe)
+
+        do {
+            try modelContext.save()
+            latestFeedback = RecognitionFeedback(
+                title: recipeTitle,
+                message: "Recipe removed from your local library.",
+                style: .success,
+                recipeID: nil
+            )
+        } catch {
+            latestFeedback = RecognitionFeedback(
+                title: recipeTitle,
+                message: "The recipe could not be removed from your library.",
+                style: .warning,
+                recipeID: nil
+            )
+        }
+    }
+
+    private func evaluateRecipeTitle(
         _ rawTitle: String,
+        source: ScanSource,
         using modelContext: ModelContext
     ) {
         let inputTitle = rawTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        titleScanInput = inputTitle
+
+        if source == .manualEntry {
+            titleScanInput = inputTitle
+        }
 
         guard !inputTitle.isEmpty else {
             latestTitleScanResult = TitleScanResult(
                 title: "No Title Entered",
-                message: "Enter or dictate a recipe title first.",
+                message: "Enter or capture a recipe title first.",
                 stage: .failed
             )
             latestFeedback = RecognitionFeedback(
                 title: "No Title Entered",
-                message: "Enter or dictate a recipe title first.",
+                message: "Enter or capture a recipe title first.",
                 style: .warning,
                 recipeID: nil
             )
@@ -114,7 +345,7 @@ final class AppModel {
 
         latestTitleScanResult = TitleScanResult(
             title: "Checking Recipe Title",
-            message: "Comparing the entered title with your saved recipes.",
+            message: "Comparing the detected title with your saved recipes.",
             stage: .analyzing
         )
 
@@ -125,6 +356,7 @@ final class AppModel {
             among: savedRecipes.map(\.snapshot)
         ), let existingRecipe = storedRecipe(
             matchingTitle: savedTitleMatch.title,
+            subtitle: savedTitleMatch.subtitle,
             hellofreshCode: savedTitleMatch.hellofreshCode,
             in: savedRecipes
         ) {
@@ -135,15 +367,21 @@ final class AppModel {
             )
             latestFeedback = RecognitionFeedback(
                 title: existingRecipe.title,
-                message: "This recipe is already saved.",
+                message: "This recipe is already saved in your local library.",
                 style: .warning,
                 recipeID: nil
             )
+            pendingRecipeDraft = nil
             return
         }
 
         if let catalogMatch = RecipeMatcher.bestMatch(for: inputTitle, in: SampleRecipeCatalog.entries) {
-            if let existingRecipe = storedRecipe(matching: catalogMatch, in: savedRecipes) {
+            if let existingRecipe = storedRecipe(
+                matchingTitle: catalogMatch.title,
+                subtitle: catalogMatch.subtitle,
+                hellofreshCode: catalogMatch.hellofreshCode,
+                in: savedRecipes
+            ) {
                 latestTitleScanResult = TitleScanResult(
                     title: existingRecipe.title,
                     message: "This title matches a recipe already saved in your library.",
@@ -151,46 +389,46 @@ final class AppModel {
                 )
                 latestFeedback = RecognitionFeedback(
                     title: existingRecipe.title,
-                    message: "This recipe is already saved.",
+                    message: "This recipe is already saved in your local library.",
                     style: .warning,
                     recipeID: catalogMatch.id
                 )
+                pendingRecipeDraft = nil
             } else {
-                let draft = PendingRecipeDraft(entry: catalogMatch, sourceDescription: "title scan")
+                let draft = PendingRecipeDraft(
+                    entry: catalogMatch,
+                    sourceDescription: source.description
+                )
                 latestTitleScanResult = TitleScanResult(
                     title: catalogMatch.title,
-                    message: "The title matches a known recipe. Save it if this is a new card for your library.",
+                    message: "The title matches a known recipe. Review and save it if this is a new card for your library.",
                     stage: .matchedCatalogRecipe
                 )
-                saveOrStage(draft: draft, using: modelContext)
+                saveOrStage(
+                    draft: draft,
+                    using: modelContext,
+                    requiresReview: source.requiresReview
+                )
             }
             return
         }
 
         let draft = PendingRecipeDraft(
             title: inputTitle,
-            subtitle: "Added from title scan",
+            subtitle: "",
             hellofreshCode: nil,
-            sourceDescription: "title scan"
+            sourceDescription: source.description
         )
         latestTitleScanResult = TitleScanResult(
             title: inputTitle,
-            message: "No saved recipe matched this title. Save it as a new recipe if it looks right.",
+            message: "No saved recipe matched this title. Review it and save it as a new recipe if it looks right.",
             stage: .newRecipe
         )
-        saveOrStage(draft: draft, using: modelContext)
-    }
-
-    func confirmPendingSave(using modelContext: ModelContext) {
-        guard let draft = pendingRecipeDraft else {
-            return
-        }
-
-        saveDraft(draft, using: modelContext)
-    }
-
-    func dismissPendingSave() {
-        pendingRecipeDraft = nil
+        saveOrStage(
+            draft: draft,
+            using: modelContext,
+            requiresReview: source.requiresReview
+        )
     }
 
     private func fetchStoredRecipes(using modelContext: ModelContext) -> [StoredRecipe] {
@@ -213,15 +451,27 @@ final class AppModel {
 
     private func saveOrStage(
         draft: PendingRecipeDraft,
-        using modelContext: ModelContext
+        using modelContext: ModelContext,
+        requiresReview: Bool
     ) {
+        if requiresReview {
+            pendingRecipeDraft = draft
+            latestFeedback = RecognitionFeedback(
+                title: draft.title,
+                message: "Review or edit the scanned recipe before saving it. Recipes stay on this device unless you add sync later.",
+                style: .neutral,
+                recipeID: draft.id
+            )
+            return
+        }
+
         if saveMode == .automatic {
             saveDraft(draft, using: modelContext)
         } else {
             pendingRecipeDraft = draft
             latestFeedback = RecognitionFeedback(
                 title: draft.title,
-                message: "New recipe detected from \(draft.sourceDescription). Save this HelloFresh card?",
+                message: "New recipe detected from \(draft.sourceDescription). Review it and save this HelloFresh card?",
                 style: .neutral,
                 recipeID: draft.id
             )
@@ -233,9 +483,9 @@ final class AppModel {
         using modelContext: ModelContext
     ) {
         let recipe = StoredRecipe(
-            title: draft.title,
-            subtitle: draft.subtitle,
-            hellofreshCode: draft.hellofreshCode,
+            title: draft.title.trimmingCharacters(in: .whitespacesAndNewlines),
+            subtitle: draft.subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            hellofreshCode: normalizedOptionalField(draft.hellofreshCode),
             sourceDescription: draft.sourceDescription
         )
 
@@ -266,6 +516,7 @@ final class AppModel {
     ) -> StoredRecipe? {
         storedRecipe(
             matchingTitle: entry.title,
+            subtitle: entry.subtitle,
             hellofreshCode: entry.hellofreshCode,
             in: savedRecipes
         )
@@ -273,17 +524,37 @@ final class AppModel {
 
     private func storedRecipe(
         matchingTitle title: String,
+        subtitle: String?,
         hellofreshCode: String?,
         in savedRecipes: [StoredRecipe]
     ) -> StoredRecipe? {
         let normalizedTitle = RecipeNormalizer.normalizedKey(for: title)
+        let normalizedSubtitle = RecipeNormalizer.normalizedKey(for: subtitle ?? "")
 
         return savedRecipes.first { savedRecipe in
             if let hellofreshCode, let savedCode = savedRecipe.hellofreshCode, savedCode == hellofreshCode {
                 return true
             }
 
-            return savedRecipe.normalizedTitle == normalizedTitle
+            if savedRecipe.normalizedTitle != normalizedTitle {
+                return false
+            }
+
+            if normalizedSubtitle.isEmpty {
+                return true
+            }
+
+            return savedRecipe.normalizedSubtitle == normalizedSubtitle
+                || savedRecipe.normalizedSubtitle.isEmpty
         }
+    }
+
+    private func normalizedOptionalField(_ value: String?) -> String? {
+        guard let value else {
+            return nil
+        }
+
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }

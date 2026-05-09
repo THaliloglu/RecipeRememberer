@@ -14,8 +14,11 @@ That means it was built through fast iteration and AI-assisted pairing, then cle
 
 - Live recipe title scanning with `DataScannerViewController`
 - Manual title entry fallback when live scanning is unavailable
-- Duplicate detection against previously saved recipes
+- Duplicate detection using title, subtitle, and optional HelloFresh code signals
 - Local persistence with `SwiftData`
+- Review-and-edit flow before saving live scanner captures
+- Rename and delete controls for saved recipes
+- Recent save feedback after each scan
 - Searchable recipe library
 - iPhone and iPad support
 
@@ -59,12 +62,18 @@ xcodebuild -project RecipeRememberer.xcodeproj -scheme RecipeRememberer -destina
 ## Notes
 
 - Recipes are stored locally on the device.
-- The project currently matches recipes primarily by recognized title text.
+- The live scanner is strongest when the printed title is clearly framed and well lit.
 - This project is not affiliated with HelloFresh.
 - Released under the [MIT License](LICENSE).
+
+## Release Prep
+
+- Support notes: [SUPPORT.md](SUPPORT.md)
+- Privacy draft: [PRIVACY.md](PRIVACY.md)
+- App Store metadata draft: [AppStoreMetadata.md](AppStoreMetadata.md)
 
 ## GitHub Publishing Checklist
 
 - Personal signing values were removed from the Xcode project.
-- The bundle identifier was replaced with a generic example identifier.
+- The bundle identifier was replaced with a publishable placeholder identifier.
 - Local Xcode and SwiftPM build artifacts are ignored by [`.gitignore`](.gitignore).

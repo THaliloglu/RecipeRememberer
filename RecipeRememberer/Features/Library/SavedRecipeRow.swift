@@ -8,12 +8,19 @@ struct SavedRecipeRow: View {
             Text(recipe.title)
                 .font(.headline)
 
-            Text(recipe.subtitle)
-                .foregroundStyle(.secondary)
+            if !recipe.subtitle.isEmpty {
+                Text(recipe.subtitle)
+                    .foregroundStyle(.secondary)
+            }
 
             HStack {
                 if let hellofreshCode = recipe.hellofreshCode {
                     Text(hellofreshCode)
+                        .foregroundStyle(.secondary)
+                }
+
+                if !recipe.sourceDescription.isEmpty {
+                    Text(recipe.sourceDescription)
                         .foregroundStyle(.secondary)
                 }
 
@@ -25,5 +32,7 @@ struct SavedRecipeRow: View {
             .font(.footnote)
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityHint("Swipe for rename and delete options.")
     }
 }

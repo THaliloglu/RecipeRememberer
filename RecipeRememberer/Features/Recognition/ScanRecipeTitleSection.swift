@@ -8,31 +8,35 @@ struct ScanRecipeTitleSection: View {
     var body: some View {
         @Bindable var appModel = appModel
 
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: AppStyle.cardSpacing) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Recipe Title")
                         .font(.headline)
                         .bold()
 
-                    Text("Use the camera or type a title.")
+                    Text("Use the camera for live text capture or type a title manually.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
 
                 Spacer()
 
-                Picker("Save mode", selection: $appModel.saveMode) {
-                    Text("Ask First").tag(AppModel.SaveMode.confirmFirst)
-                    Text("Auto Save").tag(AppModel.SaveMode.automatic)
+                Menu {
+                    ForEach(AppModel.SaveMode.allCases) { mode in
+                        Button(mode.shortTitle) {
+                            appModel.saveMode = mode
+                        }
+                    }
+                } label: {
+                    Label(appModel.saveMode.shortTitle, systemImage: "square.and.arrow.down.on.square")
                 }
-                .pickerStyle(.menu)
-                .labelsHidden()
+                .accessibilityLabel("Save Mode")
+                .accessibilityValue(appModel.saveMode.shortTitle)
+                .accessibilityHint(appModel.saveMode.detail)
             }
 
-            Button {
-                isLiveScannerPresented = true
-            } label: {
+            Button(action: openScanner) {
                 HStack(spacing: 12) {
                     Image(systemName: "camera.viewfinder")
                         .font(.title3)
@@ -41,7 +45,7 @@ struct ScanRecipeTitleSection: View {
                         Text("Open Scanner")
                             .font(.headline)
 
-                        Text("Point at the printed recipe title")
+                        Text("Capture a printed title and review it before saving")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -52,92 +56,40 @@ struct ScanRecipeTitleSection: View {
                 .padding(.vertical, 14)
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityHint("Opens the live camera scanner to capture a printed recipe title.")
 
             HStack(spacing: 12) {
                 TextField("Recipe title", text: $appModel.titleScanInput)
                     .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.words)
                     .submitLabel(.done)
+                    .onSubmit {
+                        appModel.scanRecipeTitle(using: modelContext)
+                    }
 
-                Button("Check", systemImage: "text.viewfinder") {
-                    appModel.scanRecipeTitle(using: modelContext)
-                }
+                Button("Check", systemImage: "text.viewfinder", action: checkTypedTitle)
                 .buttonStyle(.bordered)
+                .accessibilityHint("Compares the typed recipe title with your saved recipes.")
             }
 
-            if appModel.latestTitleScanResult.stage != .idle {
-                TitleScanStatusCard(result: appModel.latestTitleScanResult)
-            }
+            Text("Camera captures always open a review step first so you can correct OCR mistakes before saving.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
-        .padding(16)
-        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: 20))
+        .padding(AppStyle.cardPadding)
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
         .sheet(isPresented: $isLiveScannerPresented) {
             LiveTitleScannerView { detectedTitle in
-                appModel.scanRecipeTitle(detectedTitle, using: modelContext)
+                appModel.scanCapturedTitle(detectedTitle, using: modelContext)
             }
         }
     }
-}
 
-private struct TitleScanStatusCard: View {
-    let result: AppModel.TitleScanResult
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: symbolName)
-                .font(.headline)
-                .foregroundStyle(iconStyle)
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(result.title)
-                    .font(.headline)
-
-                Text(result.message)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer(minLength: 0)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .background(.background.opacity(0.65), in: .rect(cornerRadius: 18))
+    private func openScanner() {
+        isLiveScannerPresented = true
     }
 
-    private var symbolName: String {
-        switch result.stage {
-        case .idle:
-            return "text.viewfinder"
-        case .analyzing:
-            return "viewfinder.circle"
-        case .matchedSavedRecipe:
-            return "checkmark.circle.fill"
-        case .matchedCatalogRecipe:
-            return "doc.text.image"
-        case .newRecipe:
-            return "plus.circle.fill"
-        case .failed:
-            return "exclamationmark.triangle.fill"
-        }
+    private func checkTypedTitle() {
+        appModel.scanRecipeTitle(using: modelContext)
     }
-
-    private var iconStyle: AnyShapeStyle {
-        switch result.stage {
-        case .idle:
-            return AnyShapeStyle(.secondary)
-        case .analyzing:
-            return AnyShapeStyle(.blue)
-        case .matchedSavedRecipe:
-            return AnyShapeStyle(.green)
-        case .matchedCatalogRecipe:
-            return AnyShapeStyle(.blue)
-        case .newRecipe:
-            return AnyShapeStyle(.orange)
-        case .failed:
-            return AnyShapeStyle(.red)
-        }
-    }
-}
-
-#Preview {
-    ScanRecipeTitleSection()
-        .environment(AppModel())
 }

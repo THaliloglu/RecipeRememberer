@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "RecipeRemembererCore",
     platforms: [
+        .iOS("26.0"),
         .macOS("15.0"),
-        .visionOS("2.0"),
     ],
     products: [
         .library(
