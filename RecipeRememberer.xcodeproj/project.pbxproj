@@ -31,6 +31,7 @@
 		A00000480000000000000048 /* RecentSavedRecipesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001280000000000000128 /* RecentSavedRecipesSection.swift */; };
 		A00000490000000000000049 /* EditRecipeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001290000000000000129 /* EditRecipeSheet.swift */; };
 		A000004A000000000000004A /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012A000000000000012A /* AppStyle.swift */; };
+		A000004B000000000000004B /* RecipeCardTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012B000000000000012B /* RecipeCardTextParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		A00001280000000000000128 /* RecentSavedRecipesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSavedRecipesSection.swift; sourceTree = "<group>"; };
 		A00001290000000000000129 /* EditRecipeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRecipeSheet.swift; sourceTree = "<group>"; };
 		A000012A000000000000012A /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
+		A000012B000000000000012B /* RecipeCardTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardTextParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				A00001230000000000000123 /* SampleRecipeCatalog.swift */,
 				A00001240000000000000124 /* SavedRecipeSnapshot.swift */,
 				A00001250000000000000125 /* DuplicateRecipeDetector.swift */,
+				A000012B000000000000012B /* RecipeCardTextParser.swift */,
 			);
 			path = Packages/RecipeRemembererCore/Sources/RecipeRemembererCore;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 				A00000290000000000000029 /* ScanRecipeTitleSection.swift in Sources */,
 				A000002A000000000000002A /* LiveTitleScannerView.swift in Sources */,
 				A00000430000000000000043 /* SampleRecipeCatalog.swift in Sources */,
+				A000004B000000000000004B /* RecipeCardTextParser.swift in Sources */,
 				A00000460000000000000046 /* TitleScanStatusCard.swift in Sources */,
 				A00000410000000000000041 /* RecipeMatcher.swift in Sources */,
 				A00000440000000000000044 /* SavedRecipeSnapshot.swift in Sources */,

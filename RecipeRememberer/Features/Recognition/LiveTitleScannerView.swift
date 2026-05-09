@@ -7,9 +7,10 @@ struct LiveTitleScannerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    let onTitleCaptured: (String) -> Void
+    let onRecipeCaptured: (String, String, String?) -> Void
 
-    @State private var detectedTitle = ""
+    @State private var detectedRecipe = DetectedRecipeText()
+    @State private var preferredTitle: String?
     @State private var scannerErrorMessage: String?
     @State private var scannerSessionID = UUID()
     @State private var cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
@@ -75,40 +76,41 @@ struct LiveTitleScannerView: View {
     private var scannerContent: some View {
         VStack(spacing: 16) {
             DataScannerContainerView(
-                detectedTitle: $detectedTitle,
+                detectedRecipe: $detectedRecipe,
+                preferredTitle: $preferredTitle,
                 scannerErrorMessage: $scannerErrorMessage
             )
             .id(scannerSessionID)
             .clipShape(.rect(cornerRadius: 28))
             .overlay(alignment: .bottomLeading) {
                 ScannerOverlayCard(
-                    detectedTitle: detectedTitle,
+                    detectedRecipe: detectedRecipe,
                     captureQuality: captureQuality
                 )
                 .padding()
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Aim the camera at the printed recipe title, then tap the matching text in the camera view to lock it in.")
+                Text("Aim the camera at the recipe header, then tap the title line if you want to lock onto a specific result.")
                     .foregroundStyle(.secondary)
 
                 if captureQuality == .weak {
-                    Text("This capture looks a little weak. Move closer, steady the device, or tap a clearer line before saving.")
+                    Text("This capture still looks a little weak. Move closer, steady the device, or tap a clearer title line before saving.")
                         .font(.footnote)
                         .foregroundStyle(.orange)
                 }
 
                 if captureQuality == .good {
-                    Button("Review Captured Title", systemImage: "pencil.and.outline") {
-                        commitDetectedTitle()
+                    Button("Review Captured Recipe", systemImage: "pencil.and.outline") {
+                        commitDetectedRecipe()
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
                     Button("Use Current Capture", systemImage: "checkmark.text.box") {
-                        commitDetectedTitle()
+                        commitDetectedRecipe()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(detectedTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
@@ -135,7 +137,7 @@ struct LiveTitleScannerView: View {
     }
 
     private var captureQuality: CaptureQuality {
-        let trimmedTitle = detectedTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedTitle = detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines)
         let wordCount = trimmedTitle.split(separator: " ").count
 
         if trimmedTitle.isEmpty {
@@ -171,20 +173,40 @@ struct LiveTitleScannerView: View {
 
     private func retryScanner() {
         scannerErrorMessage = nil
-        detectedTitle = ""
+        detectedRecipe = DetectedRecipeText()
+        preferredTitle = nil
         scannerSessionID = UUID()
         cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     }
 
-    private func commitDetectedTitle() {
-        let trimmedTitle = detectedTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+    private func commitDetectedRecipe() {
+        let trimmedTitle = detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else {
             return
         }
 
-        onTitleCaptured(trimmedTitle)
+        onRecipeCaptured(
+            trimmedTitle,
+            detectedRecipe.subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            normalizedOptionalField(detectedRecipe.hellofreshCode)
+        )
         dismiss()
     }
+
+    private func normalizedOptionalField(_ value: String?) -> String? {
+        guard let value else {
+            return nil
+        }
+
+        let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmedValue.isEmpty ? nil : trimmedValue
+    }
+}
+
+private struct DetectedRecipeText: Equatable {
+    var title = ""
+    var subtitle = ""
+    var hellofreshCode: String?
 }
 
 private enum ScannerState {
@@ -223,19 +245,32 @@ private struct ScannerStateCard: View {
 }
 
 private struct ScannerOverlayCard: View {
-    let detectedTitle: String
+    let detectedRecipe: DetectedRecipeText
     let captureQuality: CaptureQuality
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Detected Title")
+            Text("Detected Recipe")
                 .font(.headline)
 
-            Text(detectedTitle.isEmpty ? "No title captured yet" : detectedTitle)
-                .foregroundStyle(.secondary)
+            Text(detectedRecipe.title.isEmpty ? "No title captured yet" : detectedRecipe.title)
+                .bold()
+                .foregroundStyle(.primary)
+
+            if !detectedRecipe.subtitle.isEmpty {
+                Text(detectedRecipe.subtitle)
+                    .foregroundStyle(.secondary)
+            }
+
+            if let hellofreshCode = detectedRecipe.hellofreshCode {
+                Label(hellofreshCode, systemImage: "number.square")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
 
             Text(qualityMessage)
                 .font(.footnote)
+                .foregroundStyle(.secondary)
                 .foregroundStyle(qualityStyle)
         }
         .padding()
@@ -266,12 +301,14 @@ private struct ScannerOverlayCard: View {
 }
 
 private struct DataScannerContainerView: UIViewControllerRepresentable {
-    @Binding var detectedTitle: String
+    @Binding var detectedRecipe: DetectedRecipeText
+    @Binding var preferredTitle: String?
     @Binding var scannerErrorMessage: String?
 
     func makeCoordinator() -> Coordinator {
         Coordinator(
-            detectedTitle: $detectedTitle,
+            detectedRecipe: $detectedRecipe,
+            preferredTitle: $preferredTitle,
             scannerErrorMessage: $scannerErrorMessage
         )
     }
@@ -311,14 +348,18 @@ private struct DataScannerContainerView: UIViewControllerRepresentable {
     }
 
     final class Coordinator: NSObject, DataScannerViewControllerDelegate {
-        @Binding private var detectedTitle: String
+        @Binding private var detectedRecipe: DetectedRecipeText
+        @Binding private var preferredTitle: String?
         @Binding private var scannerErrorMessage: String?
+        private var latestTextLines: [RecipeCardTextLine] = []
 
         init(
-            detectedTitle: Binding<String>,
+            detectedRecipe: Binding<DetectedRecipeText>,
+            preferredTitle: Binding<String?>,
             scannerErrorMessage: Binding<String?>
         ) {
-            _detectedTitle = detectedTitle
+            _detectedRecipe = detectedRecipe
+            _preferredTitle = preferredTitle
             _scannerErrorMessage = scannerErrorMessage
         }
 
@@ -327,7 +368,7 @@ private struct DataScannerContainerView: UIViewControllerRepresentable {
             didAdd addedItems: [RecognizedItem],
             allItems: [RecognizedItem]
         ) {
-            updateDetectedTitle(from: allItems.isEmpty ? addedItems : allItems)
+            updateDetectedRecipe(from: allItems.isEmpty ? addedItems : allItems)
         }
 
         func dataScanner(
@@ -335,94 +376,93 @@ private struct DataScannerContainerView: UIViewControllerRepresentable {
             didUpdate updatedItems: [RecognizedItem],
             allItems: [RecognizedItem]
         ) {
-            updateDetectedTitle(from: allItems.isEmpty ? updatedItems : allItems)
+            updateDetectedRecipe(from: allItems.isEmpty ? updatedItems : allItems)
         }
 
         func dataScanner(
             _ dataScanner: DataScannerViewController,
             didTapOn item: RecognizedItem
         ) {
-            updateDetectedTitle(from: [item])
+            if case let .text(text) = item {
+                preferredTitle = text.transcript.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+
+            if latestTextLines.isEmpty, case let .text(text) = item {
+                latestTextLines = [
+                    RecipeCardTextLine(
+                        transcript: text.transcript,
+                        frame: boundingRect(for: text.bounds)
+                    ),
+                ]
+            }
+
+            updateDetectedRecipe(from: latestTextLines)
         }
 
         func reportScannerError(_ error: Error) {
-            detectedTitle = ""
+            detectedRecipe = DetectedRecipeText()
             scannerErrorMessage = error.localizedDescription
         }
 
-        private func updateDetectedTitle(from items: [RecognizedItem]) {
-            let candidates = items.compactMap { item in
-                switch item {
-                case let .text(text):
-                    return text.transcript.trimmingCharacters(in: .whitespacesAndNewlines)
-                default:
+        private func updateDetectedRecipe(from items: [RecognizedItem]) {
+            latestTextLines = items.compactMap { item -> RecipeCardTextLine? in
+                guard case let .text(text) = item else {
                     return nil
                 }
+
+                return RecipeCardTextLine(
+                    transcript: text.transcript,
+                    frame: boundingRect(for: text.bounds)
+                )
             }
 
-            guard let bestCandidate = candidates.max(by: { left, right in
-                score(for: left) < score(for: right)
-            }) else {
+            updateDetectedRecipe(from: latestTextLines)
+        }
+
+        private func updateDetectedRecipe(from lines: [RecipeCardTextLine]) {
+            guard let parsedRecipe = RecipeCardTextParser.parse(
+                from: lines,
+                preferredTitle: preferredTitle
+            ) else {
                 return
             }
 
             scannerErrorMessage = nil
-            detectedTitle = bestCandidate
+            detectedRecipe = DetectedRecipeText(
+                title: parsedRecipe.title,
+                subtitle: parsedRecipe.subtitle,
+                hellofreshCode: parsedRecipe.hellofreshCode
+            )
         }
 
-        private func score(for candidate: String) -> Int {
-            let wordCount = candidate.split(separator: " ").count
-            let hasMixedCase = candidate != candidate.lowercased()
-            let normalizedCandidate = candidate.lowercased()
-            let penalty = ignoredPhrases.reduce(into: 0) { partialResult, phrase in
-                if normalizedCandidate.localizedStandardContains(phrase) {
-                    partialResult += 160
-                }
-            }
-            let digitPenalty = candidate.contains(where: \.isNumber) ? 40 : 0
-            let titleBonus = titleWords.reduce(into: 0) { partialResult, word in
-                if normalizedCandidate.localizedStandardContains(word) {
-                    partialResult += 35
-                }
-            }
-
-            return wordCount * 100
-                + candidate.count
-                + (hasMixedCase ? 20 : 0)
-                + titleBonus
-                - penalty
-                - digitPenalty
-        }
-
-        private var ignoredPhrases: [String] {
-            [
-                "hello fresh",
-                "hellofresh",
-                "min",
-                "kcal",
-                "protein",
-                "kalorien",
-                "geschmack",
+        private func boundingRect(for bounds: RecognizedItem.Bounds) -> CGRect {
+            let xValues = [
+                bounds.topLeft.x,
+                bounds.topRight.x,
+                bounds.bottomLeft.x,
+                bounds.bottomRight.x,
             ]
-        }
-
-        private var titleWords: [String] {
-            [
-                "gratin",
-                "chicken",
-                "rigatoni",
-                "pasta",
-                "soup",
-                "bowl",
-                "porree",
-                "kartoffeln",
-                "beef",
-                "veggie",
+            let yValues = [
+                bounds.topLeft.y,
+                bounds.topRight.y,
+                bounds.bottomLeft.y,
+                bounds.bottomRight.y,
             ]
+            let minX = xValues.min() ?? 0
+            let maxX = xValues.max() ?? 0
+            let minY = yValues.min() ?? 0
+            let maxY = yValues.max() ?? 0
+
+            return CGRect(
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY
+            )
         }
     }
 }
 
 #Preview {
-    LiveTitleScannerView { _ in }
+    LiveTitleScannerView { _, _, _ in }
 }

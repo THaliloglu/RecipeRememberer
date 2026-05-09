@@ -79,8 +79,13 @@ struct ScanRecipeTitleSection: View {
         .padding(AppStyle.cardPadding)
         .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
         .sheet(isPresented: $isLiveScannerPresented) {
-            LiveTitleScannerView { detectedTitle in
-                appModel.scanCapturedTitle(detectedTitle, using: modelContext)
+            LiveTitleScannerView { title, subtitle, hellofreshCode in
+                appModel.scanCapturedRecipe(
+                    title: title,
+                    subtitle: subtitle,
+                    hellofreshCode: hellofreshCode,
+                    using: modelContext
+                )
             }
         }
     }

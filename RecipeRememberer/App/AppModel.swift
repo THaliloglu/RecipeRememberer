@@ -128,8 +128,10 @@ final class AppModel {
     var librarySearchText = ""
 
     func scanRecipeTitle(using modelContext: ModelContext) {
-        evaluateRecipeTitle(
-            titleScanInput,
+        evaluateRecipeInput(
+            title: titleScanInput,
+            subtitle: nil,
+            hellofreshCode: nil,
             source: .manualEntry,
             using: modelContext
         )
@@ -139,8 +141,25 @@ final class AppModel {
         _ capturedTitle: String,
         using modelContext: ModelContext
     ) {
-        evaluateRecipeTitle(
-            capturedTitle,
+        evaluateRecipeInput(
+            title: capturedTitle,
+            subtitle: nil,
+            hellofreshCode: nil,
+            source: .liveScanner,
+            using: modelContext
+        )
+    }
+
+    func scanCapturedRecipe(
+        title: String,
+        subtitle: String,
+        hellofreshCode: String?,
+        using modelContext: ModelContext
+    ) {
+        evaluateRecipeInput(
+            title: title,
+            subtitle: subtitle,
+            hellofreshCode: hellofreshCode,
             source: .liveScanner,
             using: modelContext
         )
@@ -317,12 +336,27 @@ final class AppModel {
         }
     }
 
-    private func evaluateRecipeTitle(
-        _ rawTitle: String,
+    private func evaluateRecipeInput(
+        title rawTitle: String,
+        subtitle rawSubtitle: String?,
+        hellofreshCode rawHellofreshCode: String?,
         source: ScanSource,
         using modelContext: ModelContext
     ) {
         let inputTitle = rawTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        let inputSubtitle = rawSubtitle?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let inputHellofreshCode = normalizedOptionalField(rawHellofreshCode)
+        var detectedRecipeParts = [inputTitle]
+
+        if !inputSubtitle.isEmpty {
+            detectedRecipeParts.append(inputSubtitle)
+        }
+
+        if let inputHellofreshCode {
+            detectedRecipeParts.append(inputHellofreshCode)
+        }
+
+        let combinedDetectedText = detectedRecipeParts.joined(separator: "\n")
 
         if source == .manualEntry {
             titleScanInput = inputTitle
@@ -345,14 +379,35 @@ final class AppModel {
 
         latestTitleScanResult = TitleScanResult(
             title: "Checking Recipe Title",
-            message: "Comparing the detected title with your saved recipes.",
+            message: "Comparing the detected recipe with your saved recipes.",
             stage: .analyzing
         )
 
         let savedRecipes = fetchStoredRecipes(using: modelContext)
 
+        if let existingRecipe = storedRecipe(
+            matchingTitle: inputTitle,
+            subtitle: inputSubtitle,
+            hellofreshCode: inputHellofreshCode,
+            in: savedRecipes
+        ) {
+            latestTitleScanResult = TitleScanResult(
+                title: existingRecipe.title,
+                message: "This title matches a recipe already saved in your library.",
+                stage: .matchedSavedRecipe
+            )
+            latestFeedback = RecognitionFeedback(
+                title: existingRecipe.title,
+                message: "This recipe is already saved in your local library.",
+                style: .warning,
+                recipeID: nil
+            )
+            pendingRecipeDraft = nil
+            return
+        }
+
         if let savedTitleMatch = DuplicateRecipeDetector.bestTitleMatch(
-            for: inputTitle,
+            for: combinedDetectedText,
             among: savedRecipes.map(\.snapshot)
         ), let existingRecipe = storedRecipe(
             matchingTitle: savedTitleMatch.title,
@@ -375,7 +430,10 @@ final class AppModel {
             return
         }
 
-        if let catalogMatch = RecipeMatcher.bestMatch(for: inputTitle, in: SampleRecipeCatalog.entries) {
+        if let catalogMatch = RecipeMatcher.bestMatch(
+            for: combinedDetectedText,
+            in: SampleRecipeCatalog.entries
+        ) {
             if let existingRecipe = storedRecipe(
                 matchingTitle: catalogMatch.title,
                 subtitle: catalogMatch.subtitle,
@@ -415,8 +473,8 @@ final class AppModel {
 
         let draft = PendingRecipeDraft(
             title: inputTitle,
-            subtitle: "",
-            hellofreshCode: nil,
+            subtitle: inputSubtitle,
+            hellofreshCode: inputHellofreshCode,
             sourceDescription: source.description
         )
         latestTitleScanResult = TitleScanResult(
