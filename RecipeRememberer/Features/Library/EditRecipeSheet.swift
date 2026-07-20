@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct EditRecipeSheet: View {
     @Environment(AppModel.self) private var appModel
@@ -22,7 +23,13 @@ struct EditRecipeSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Recipe Details") {
+                if recipe.savedPhotoCount > 0 {
+                    Section("Saved Photos") {
+                        SavedRecipePhotoStrip(recipe: recipe)
+                    }
+                }
+
+                Section("Recipe") {
                     TextField("Recipe title", text: $title)
                         .textInputAutocapitalization(.words)
 
@@ -32,8 +39,15 @@ struct EditRecipeSheet: View {
                     TextField("HelloFresh code", text: $hellofreshCode)
                         .textInputAutocapitalization(.characters)
                 }
+
+                if !recipe.analysisSummary.isEmpty {
+                    Section("Notes") {
+                        Text(recipe.analysisSummary)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
-            .navigationTitle("Edit Recipe")
+            .navigationTitle("Recipe")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
@@ -57,6 +71,56 @@ struct EditRecipeSheet: View {
                     }
                     .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
+            }
+        }
+    }
+}
+
+private struct SavedRecipePhotoStrip: View {
+    let recipe: StoredRecipe
+
+    var body: some View {
+        HStack(spacing: 12) {
+            if let frontPhotoURL = RecipePhotoStore.url(for: recipe.frontPhotoFilename) {
+                SavedRecipePhotoThumbnail(
+                    title: "Front",
+                    photoURL: frontPhotoURL
+                )
+            }
+
+            if let backPhotoURL = RecipePhotoStore.url(for: recipe.backPhotoFilename) {
+                SavedRecipePhotoThumbnail(
+                    title: "Back",
+                    photoURL: backPhotoURL
+                )
+            }
+        }
+    }
+}
+
+private struct SavedRecipePhotoThumbnail: View {
+    let title: String
+    let photoURL: URL
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            if let uiImage = UIImage(contentsOfFile: photoURL.path) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 120)
+                    .clipShape(.rect(cornerRadius: 18))
+            } else {
+                ContentUnavailableView(
+                    "Photo Unavailable",
+                    systemImage: "photo"
+                )
+                .frame(height: 120)
             }
         }
     }

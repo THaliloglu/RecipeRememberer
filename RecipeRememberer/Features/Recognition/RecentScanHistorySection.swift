@@ -2,12 +2,22 @@ import SwiftUI
 
 struct RecentScanHistorySection: View {
     let records: [AppModel.RecentScanRecord]
+    let onUseAgain: (AppModel.RecentScanRecord) -> Void
+    let onClear: () -> Void
 
     var body: some View {
         if !records.isEmpty {
             VStack(alignment: .leading, spacing: AppStyle.cardSpacing) {
-                Text("Recent Captures")
-                    .font(.headline)
+                HStack {
+                    Text("Recent Captures")
+                        .font(.headline)
+
+                    Spacer()
+
+                    Button("Clear", role: .destructive, action: onClear)
+                        .buttonStyle(.borderless)
+                        .font(.footnote)
+                }
 
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(records) { record in
@@ -44,8 +54,14 @@ struct RecentScanHistorySection: View {
                             }
 
                             Spacer(minLength: 0)
+
+                            Button(actionTitle(for: record.stage)) {
+                                onUseAgain(record)
+                            }
+                            .buttonStyle(.bordered)
+                            .font(.footnote)
                         }
-                        .accessibilityElement(children: .combine)
+                        .accessibilityElement(children: .contain)
                     }
                 }
             }
@@ -85,6 +101,19 @@ struct RecentScanHistorySection: View {
             return AnyShapeStyle(.orange)
         case .failed:
             return AnyShapeStyle(.red)
+        }
+    }
+
+    private func actionTitle(for stage: AppModel.TitleScanStage) -> String {
+        switch stage {
+        case .idle, .analyzing:
+            return "Use Again"
+        case .matchedSavedRecipe:
+            return "Check Again"
+        case .matchedCatalogRecipe, .newRecipe:
+            return "Review Again"
+        case .failed:
+            return "Try Again"
         }
     }
 }

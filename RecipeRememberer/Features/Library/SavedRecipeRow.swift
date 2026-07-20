@@ -19,9 +19,12 @@ struct SavedRecipeRow: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if !recipe.sourceDescription.isEmpty {
-                    Text(recipe.sourceDescription)
-                        .foregroundStyle(.secondary)
+                if recipe.savedPhotoCount > 0 {
+                    Label(
+                        "\(recipe.savedPhotoCount) photos",
+                        systemImage: "photo.on.rectangle.angled"
+                    )
+                    .foregroundStyle(.secondary)
                 }
 
                 Spacer()
@@ -33,6 +36,6 @@ struct SavedRecipeRow: View {
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
-        .accessibilityHint("Swipe for rename and delete options.")
+        .accessibilityHint("Double tap to review saved photos. Swipe for rename and delete options.")
     }
 }

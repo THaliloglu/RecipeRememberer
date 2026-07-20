@@ -11,11 +11,11 @@ struct ScanRecipeTitleSection: View {
         VStack(alignment: .leading, spacing: AppStyle.cardSpacing) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Recipe Title")
+                    Text("Scan Recipe")
                         .font(.headline)
                         .bold()
 
-                    Text("Use the camera for live text capture or type a title manually.")
+                    Text("Scan a card or type a title.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -45,7 +45,7 @@ struct ScanRecipeTitleSection: View {
                         Text("Open Scanner")
                             .font(.headline)
 
-                        Text("Capture a printed title and review it before saving")
+                        Text("Front photo, back photo, then review")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -56,7 +56,7 @@ struct ScanRecipeTitleSection: View {
                 .padding(.vertical, 14)
             }
             .buttonStyle(.borderedProminent)
-            .accessibilityHint("Opens the live camera scanner to capture a printed recipe title.")
+            .accessibilityHint("Opens the camera to capture the front and back of a printed recipe card.")
 
             HStack(spacing: 12) {
                 TextField("Recipe title", text: $appModel.titleScanInput)
@@ -72,20 +72,15 @@ struct ScanRecipeTitleSection: View {
                 .accessibilityHint("Compares the typed recipe title with your saved recipes.")
             }
 
-            Text("Camera captures always open a review step first so you can correct OCR mistakes before saving.")
+            Text("The large recipe title on the front card is the main comparison signal.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
         .padding(AppStyle.cardPadding)
         .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
         .sheet(isPresented: $isLiveScannerPresented) {
-            LiveTitleScannerView { title, subtitle, hellofreshCode in
-                appModel.scanCapturedRecipe(
-                    title: title,
-                    subtitle: subtitle,
-                    hellofreshCode: hellofreshCode,
-                    using: modelContext
-                )
+            LiveTitleScannerView { capture in
+                appModel.scanCapturedRecipe(capture, using: modelContext)
             }
         }
     }

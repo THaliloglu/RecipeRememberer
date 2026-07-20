@@ -33,6 +33,10 @@
 		A000004A000000000000004A /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012A000000000000012A /* AppStyle.swift */; };
 		A000004B000000000000004B /* RecipeCardTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012B000000000000012B /* RecipeCardTextParser.swift */; };
 		A000004C000000000000004C /* RecentScanHistorySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012C000000000000012C /* RecentScanHistorySection.swift */; };
+		A000004D000000000000004D /* RecipeCapturePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012D000000000000012D /* RecipeCapturePayload.swift */; };
+		A000004E000000000000004E /* RecipePhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012E000000000000012E /* RecipePhotoStore.swift */; };
+		A000004F000000000000004F /* RecipePhotoAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012F000000000000012F /* RecipePhotoAnalyzer.swift */; };
+		A00000500000000000000050 /* RecipeCardCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001300000000000000130 /* RecipeCardCameraView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +68,10 @@
 		A000012A000000000000012A /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		A000012B000000000000012B /* RecipeCardTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardTextParser.swift; sourceTree = "<group>"; };
 		A000012C000000000000012C /* RecentScanHistorySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentScanHistorySection.swift; sourceTree = "<group>"; };
+		A000012D000000000000012D /* RecipeCapturePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCapturePayload.swift; sourceTree = "<group>"; };
+		A000012E000000000000012E /* RecipePhotoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePhotoStore.swift; sourceTree = "<group>"; };
+		A000012F000000000000012F /* RecipePhotoAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePhotoAnalyzer.swift; sourceTree = "<group>"; };
+		A00001300000000000000130 /* RecipeCardCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardCameraView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +143,8 @@
 		A000000A000000000000000A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A000012D000000000000012D /* RecipeCapturePayload.swift */,
+				A000012E000000000000012E /* RecipePhotoStore.swift */,
 				A00001030000000000000103 /* StoredRecipe.swift */,
 			);
 			path = Models;
@@ -163,6 +173,8 @@
 				isa = PBXGroup;
 				children = (
 					A00001270000000000000127 /* LocalLibraryNoticeCard.swift */,
+					A00001300000000000000130 /* RecipeCardCameraView.swift */,
+					A000012F000000000000012F /* RecipePhotoAnalyzer.swift */,
 					A00001040000000000000104 /* ScannerDashboardView.swift */,
 					A000012C000000000000012C /* RecentScanHistorySection.swift */,
 					A00001280000000000000128 /* RecentSavedRecipesSection.swift */,
@@ -252,17 +264,21 @@
 				A00000110000000000000011 /* AppModel.swift in Sources */,
 				A000004A000000000000004A /* AppStyle.swift in Sources */,
 				A00000120000000000000012 /* RootView.swift in Sources */,
+				A000004D000000000000004D /* RecipeCapturePayload.swift in Sources */,
 				A00000180000000000000018 /* PendingSaveCard.swift in Sources */,
 				A00000490000000000000049 /* EditRecipeSheet.swift in Sources */,
 				A00000160000000000000016 /* SavedRecipeRow.swift in Sources */,
 				A00000420000000000000042 /* RecipeNormalizer.swift in Sources */,
+				A000004E000000000000004E /* RecipePhotoStore.swift in Sources */,
 				A00000470000000000000047 /* LocalLibraryNoticeCard.swift in Sources */,
 				A00000140000000000000014 /* ScannerDashboardView.swift in Sources */,
 				A000004C000000000000004C /* RecentScanHistorySection.swift in Sources */,
 				A00000480000000000000048 /* RecentSavedRecipesSection.swift in Sources */,
+				A00000500000000000000050 /* RecipeCardCameraView.swift in Sources */,
 				A00000290000000000000029 /* ScanRecipeTitleSection.swift in Sources */,
 				A000002A000000000000002A /* LiveTitleScannerView.swift in Sources */,
 				A00000430000000000000043 /* SampleRecipeCatalog.swift in Sources */,
+				A000004F000000000000004F /* RecipePhotoAnalyzer.swift in Sources */,
 				A000004B000000000000004B /* RecipeCardTextParser.swift in Sources */,
 				A00000460000000000000046 /* TitleScanStatusCard.swift in Sources */,
 				A00000410000000000000041 /* RecipeMatcher.swift in Sources */,

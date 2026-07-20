@@ -51,7 +51,18 @@ func duplicateDetectorFindsSavedRecipeFromOCRTitleTokens() {
             subtitle: "Kartoffeln und Porree",
             normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
             normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
-            hellofreshCode: nil
+            hellofreshCode: nil,
+            frontRecognizedText: """
+            HELLO FRESH
+            Italienisches Gratin mit Bio-Rinderhackfleisch
+            Kartoffeln und Porree
+            35 - 45 Min 613 kcal
+            """,
+            backRecognizedText: """
+            1 Kartoffel
+            1 Porree
+            1 Zwiebel
+            """
         ),
     ]
 
@@ -60,6 +71,41 @@ func duplicateDetectorFindsSavedRecipeFromOCRTitleTokens() {
         HELLO FRESH
         Italienisches Gratin mit Bio Rinderhackfleisch
         Kartoffeln und Porree
+        """,
+        among: savedRecipes
+    )
+
+    #expect(match?.title == "Italienisches Gratin mit Bio-Rinderhackfleisch")
+}
+
+@Test
+func duplicateDetectorAllowsNearMatchInsteadOfExactEquality() {
+    let savedRecipes = [
+        SavedRecipeSnapshot(
+            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
+            subtitle: "Kartoffeln und Porree",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
+            hellofreshCode: nil,
+            frontRecognizedText: """
+            HELLO FRESH
+            Italienisches Gratin mit Bio-Rinderhackfleisch
+            Kartoffeln und Porree
+            Viel Gemüse High Protein
+            """,
+            backRecognizedText: """
+            Ofenkartoffel
+            Porree
+            Knoblauchzehe
+            """
+        ),
+    ]
+
+    let match = DuplicateRecipeDetector.bestTitleMatch(
+        for: """
+        Italienisches Gratin mit Rinderhackfleisch
+        Kartoffeln & Porree
+        Hallo Fresh
         """,
         among: savedRecipes
     )

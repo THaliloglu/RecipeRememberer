@@ -77,16 +77,19 @@ final class AppModel {
         var subtitle: String
         var hellofreshCode: String?
         let sourceDescription: String
+        let capturePayload: RecipeCapturePayload?
 
         init(
             entry: RecipeCatalogEntry,
-            sourceDescription: String
+            sourceDescription: String,
+            capturePayload: RecipeCapturePayload? = nil
         ) {
             id = entry.id
             title = entry.title
             subtitle = entry.subtitle
             hellofreshCode = entry.hellofreshCode
             self.sourceDescription = sourceDescription
+            self.capturePayload = capturePayload
         }
 
         init(
@@ -94,26 +97,28 @@ final class AppModel {
             title: String,
             subtitle: String,
             hellofreshCode: String?,
-            sourceDescription: String
+            sourceDescription: String,
+            capturePayload: RecipeCapturePayload? = nil
         ) {
             self.id = id
             self.title = title
             self.subtitle = subtitle
             self.hellofreshCode = hellofreshCode
             self.sourceDescription = sourceDescription
+            self.capturePayload = capturePayload
         }
     }
 
     private enum ScanSource {
         case manualEntry
-        case liveScanner
+        case cameraCapture
 
         var description: String {
             switch self {
             case .manualEntry:
                 return "manual title entry"
-            case .liveScanner:
-                return "live title scanner"
+            case .cameraCapture:
+                return "two-photo scanner"
             }
         }
 
@@ -121,7 +126,7 @@ final class AppModel {
             switch self {
             case .manualEntry:
                 return false
-            case .liveScanner:
+            case .cameraCapture:
                 return true
             }
         }
@@ -157,24 +162,40 @@ final class AppModel {
             title: capturedTitle,
             subtitle: nil,
             hellofreshCode: nil,
-            source: .liveScanner,
+            source: .cameraCapture,
             using: modelContext
         )
     }
 
     func scanCapturedRecipe(
-        title: String,
-        subtitle: String,
-        hellofreshCode: String?,
+        _ capture: RecipeCapturePayload,
         using modelContext: ModelContext
     ) {
         evaluateRecipeInput(
-            title: title,
-            subtitle: subtitle,
-            hellofreshCode: hellofreshCode,
-            source: .liveScanner,
+            title: capture.title,
+            subtitle: capture.subtitle,
+            hellofreshCode: capture.hellofreshCode,
+            source: .cameraCapture,
+            capturePayload: capture,
             using: modelContext
         )
+    }
+
+    func retryRecentScan(
+        _ record: RecentScanRecord,
+        using modelContext: ModelContext
+    ) {
+        evaluateRecipeInput(
+            title: record.title,
+            subtitle: record.subtitle,
+            hellofreshCode: record.hellofreshCode,
+            source: scanSource(for: record.sourceDescription),
+            using: modelContext
+        )
+    }
+
+    func clearRecentScanHistory() {
+        recentScanHistory.removeAll()
     }
 
     func updatePendingDraft(
@@ -226,14 +247,13 @@ final class AppModel {
             return
         }
 
-        let savedRecipes = fetchStoredRecipes(using: modelContext)
-
-        if DuplicateRecipeDetector.isDuplicate(
+        if duplicateRecipe(
             title: draft.title,
             subtitle: draft.subtitle,
             hellofreshCode: draft.hellofreshCode,
-            among: savedRecipes.map(\.snapshot)
-        ) {
+            capturePayload: draft.capturePayload,
+            using: modelContext
+        ) != nil {
             pendingRecipeDraft = nil
             latestFeedback = RecognitionFeedback(
                 title: draft.title,
@@ -323,6 +343,53 @@ final class AppModel {
         }
     }
 
+    func duplicateRecipe(
+        title: String,
+        subtitle: String,
+        hellofreshCode: String?,
+        capturePayload: RecipeCapturePayload? = nil,
+        using modelContext: ModelContext
+    ) -> StoredRecipe? {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedSubtitle = subtitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedCode = normalizedOptionalField(hellofreshCode)
+
+        guard !trimmedTitle.isEmpty else {
+            return nil
+        }
+
+        let savedRecipes = fetchStoredRecipes(using: modelContext)
+        if let exactMatch = storedRecipe(
+            matchingTitle: trimmedTitle,
+            subtitle: trimmedSubtitle,
+            hellofreshCode: normalizedCode,
+            in: savedRecipes
+        ) {
+            return exactMatch
+        }
+
+        let comparisonText = recognizedComparisonText(
+            title: trimmedTitle,
+            subtitle: trimmedSubtitle,
+            hellofreshCode: normalizedCode,
+            capturePayload: capturePayload
+        )
+
+        guard let fuzzyMatch = DuplicateRecipeDetector.bestTitleMatch(
+            for: comparisonText,
+            among: savedRecipes.map(\.snapshot)
+        ) else {
+            return nil
+        }
+
+        return storedRecipe(
+            matchingTitle: fuzzyMatch.title,
+            subtitle: fuzzyMatch.subtitle,
+            hellofreshCode: fuzzyMatch.hellofreshCode,
+            in: savedRecipes
+        )
+    }
+
     func deleteRecipe(
         _ recipe: StoredRecipe,
         using modelContext: ModelContext
@@ -353,6 +420,7 @@ final class AppModel {
         subtitle rawSubtitle: String?,
         hellofreshCode rawHellofreshCode: String?,
         source: ScanSource,
+        capturePayload: RecipeCapturePayload? = nil,
         using modelContext: ModelContext
     ) {
         let inputTitle = rawTitle.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -368,7 +436,12 @@ final class AppModel {
             detectedRecipeParts.append(inputHellofreshCode)
         }
 
-        let combinedDetectedText = detectedRecipeParts.joined(separator: "\n")
+        let combinedDetectedText = recognizedComparisonText(
+            title: inputTitle,
+            subtitle: inputSubtitle,
+            hellofreshCode: inputHellofreshCode,
+            capturePayload: capturePayload
+        )
 
         if source == .manualEntry {
             titleScanInput = inputTitle
@@ -499,7 +572,8 @@ final class AppModel {
             } else {
                 let draft = PendingRecipeDraft(
                     entry: catalogMatch,
-                    sourceDescription: source.description
+                    sourceDescription: source.description,
+                    capturePayload: capturePayload
                 )
                 latestTitleScanResult = TitleScanResult(
                     title: catalogMatch.title,
@@ -527,7 +601,8 @@ final class AppModel {
             title: inputTitle,
             subtitle: inputSubtitle,
             hellofreshCode: inputHellofreshCode,
-            sourceDescription: source.description
+            sourceDescription: source.description,
+            capturePayload: capturePayload
         )
         latestTitleScanResult = TitleScanResult(
             title: inputTitle,
@@ -600,11 +675,40 @@ final class AppModel {
         _ draft: PendingRecipeDraft,
         using modelContext: ModelContext
     ) {
+        let storedPhotoAssets: StoredRecipePhotoAssets
+
+        if let capturePayload = draft.capturePayload {
+            do {
+                storedPhotoAssets = try RecipePhotoStore.persistPhotos(
+                    from: capturePayload,
+                    recipeID: draft.id
+                )
+            } catch {
+                latestFeedback = RecognitionFeedback(
+                    title: draft.title,
+                    message: "The recipe was analyzed, but its front and back photos could not be saved.",
+                    style: .warning,
+                    recipeID: draft.id
+                )
+                return
+            }
+        } else {
+            storedPhotoAssets = StoredRecipePhotoAssets(
+                frontPhotoFilename: nil,
+                backPhotoFilename: nil
+            )
+        }
+
         let recipe = StoredRecipe(
             title: draft.title.trimmingCharacters(in: .whitespacesAndNewlines),
             subtitle: draft.subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
             hellofreshCode: normalizedOptionalField(draft.hellofreshCode),
-            sourceDescription: draft.sourceDescription
+            sourceDescription: draft.sourceDescription,
+            frontPhotoFilename: storedPhotoAssets.frontPhotoFilename,
+            backPhotoFilename: storedPhotoAssets.backPhotoFilename,
+            frontRecognizedText: draft.capturePayload?.frontRecognizedText ?? "",
+            backRecognizedText: draft.capturePayload?.backRecognizedText ?? "",
+            analysisSummary: draft.capturePayload?.analysisSummary ?? ""
         )
 
         modelContext.insert(recipe)
@@ -619,6 +723,12 @@ final class AppModel {
                 recipeID: draft.id
             )
         } catch {
+            if storedPhotoAssets.hasSavedPhotos {
+                RecipePhotoStore.deletePhotos(
+                    frontPhotoFilename: storedPhotoAssets.frontPhotoFilename,
+                    backPhotoFilename: storedPhotoAssets.backPhotoFilename
+                )
+            }
             latestFeedback = RecognitionFeedback(
                 title: draft.title,
                 message: "The recipe was recognized, but saving it failed.",
@@ -676,6 +786,16 @@ final class AppModel {
         return trimmed.isEmpty ? nil : trimmed
     }
 
+    private func scanSource(for description: String) -> ScanSource {
+        if description == ScanSource.cameraCapture.description
+            || description == "live title scanner"
+        {
+            return .cameraCapture
+        }
+
+        return .manualEntry
+    }
+
     private func appendRecentScan(
         title: String,
         subtitle: String,
@@ -700,5 +820,31 @@ final class AppModel {
         if recentScanHistory.count > 6 {
             recentScanHistory.removeLast(recentScanHistory.count - 6)
         }
+    }
+
+    private func recognizedComparisonText(
+        title: String,
+        subtitle: String,
+        hellofreshCode: String?,
+        capturePayload: RecipeCapturePayload?
+    ) -> String {
+        var comparisonParts = [title, title]
+
+        if !subtitle.isEmpty {
+            comparisonParts.append(subtitle)
+        }
+
+        if let hellofreshCode {
+            comparisonParts.append(hellofreshCode)
+        }
+
+        if let capturePayload {
+            comparisonParts.append(capturePayload.frontRecognizedText)
+            comparisonParts.append(capturePayload.backRecognizedText)
+        }
+
+        return comparisonParts
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .joined(separator: "\n")
     }
 }

@@ -1,20 +1,24 @@
 import AVFoundation
 import SwiftUI
 import UIKit
-import VisionKit
 
 struct LiveTitleScannerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    let onRecipeCaptured: (String, String, String?) -> Void
+    let onRecipeCaptured: (RecipeCapturePayload) -> Void
 
-    @State private var detectedRecipe = DetectedRecipeText()
-    @State private var preferredTitle: String?
-    @State private var scannerErrorMessage: String?
-    @State private var scannerSessionID = UUID()
+    @State private var captureStep: CaptureStep = .front
+    @State private var frontImageData: Data?
+    @State private var backImageData: Data?
+    @State private var captureTrigger = 0
+    @State private var analysisResult: RecipePhotoAnalysis?
+    @State private var analysisMessage: String?
+    @State private var fatalScannerErrorMessage: String?
+    @State private var isAnalyzing = false
     @State private var cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var permissionRequestTask: Task<Void, Never>?
+    @State private var analysisTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -26,7 +30,7 @@ struct LiveTitleScannerView: View {
                     ScannerStateCard(
                         title: "Camera Access Needed",
                         systemImage: "camera.badge.ellipsis",
-                        message: "Allow camera access to scan printed recipe titles on your device.",
+                        message: "Allow camera access so the app can photograph the front and back of each printed recipe card.",
                         primaryActionTitle: "Continue to Camera",
                         primaryAction: requestCameraAccess
                     )
@@ -34,15 +38,9 @@ struct LiveTitleScannerView: View {
                     ScannerStateCard(
                         title: "Camera Access Denied",
                         systemImage: "camera.badge.xmark",
-                        message: "Enable camera access in Settings to use the live title scanner.",
+                        message: "Enable camera access in Settings to capture your recipe cards.",
                         primaryActionTitle: "Open Settings",
                         primaryAction: openAppSettings
-                    )
-                case .notSupported:
-                    ContentUnavailableView(
-                        "Live Scanner Unavailable",
-                        systemImage: "camera.metering.unknown",
-                        description: Text("This device does not support the live text scanner. You can still type or dictate the recipe title manually.")
                     )
                 case let .error(message):
                     ScannerStateCard(
@@ -50,75 +48,105 @@ struct LiveTitleScannerView: View {
                         systemImage: "exclamationmark.triangle.fill",
                         message: message,
                         primaryActionTitle: "Try Again",
-                        primaryAction: retryScanner
+                        primaryAction: resetScanner
                     )
                 }
             }
             .padding()
-            .navigationTitle("Live Title Scanner")
+            .navigationTitle("Scan Recipe Card")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Close") {
-                        dismiss()
-                    }
+                    Button("Close", action: closeScanner)
                 }
             }
             .task {
-                cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+                refreshCameraAuthorization()
             }
             .onDisappear {
                 permissionRequestTask?.cancel()
+                analysisTask?.cancel()
                 permissionRequestTask = nil
+                analysisTask = nil
             }
         }
     }
 
     private var scannerContent: some View {
-        VStack(spacing: 16) {
-            DataScannerContainerView(
-                detectedRecipe: $detectedRecipe,
-                preferredTitle: $preferredTitle,
-                scannerErrorMessage: $scannerErrorMessage
-            )
-            .id(scannerSessionID)
-            .clipShape(.rect(cornerRadius: 28))
-            .overlay(alignment: .bottomLeading) {
-                ScannerOverlayCard(
-                    detectedRecipe: detectedRecipe,
-                    captureQuality: captureQuality
-                )
-                .padding()
-            }
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppStyle.sectionSpacing) {
+                ZStack(alignment: .bottomLeading) {
+                    RecipeCardCameraView(
+                        captureTrigger: captureTrigger,
+                        onPhotoCapture: handleCapturedPhotoData,
+                        onError: handleFatalScannerError
+                    )
+                    .frame(minHeight: 360)
+                    .clipShape(.rect(cornerRadius: 28))
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Aim the camera at the recipe header, then tap the title line if you want to lock onto a specific result.")
-                    .foregroundStyle(.secondary)
-
-                if captureQuality == .weak {
-                    Text("This capture still looks a little weak. Move closer, steady the device, or tap a clearer title line before saving.")
-                        .font(.footnote)
-                        .foregroundStyle(.orange)
+                    CaptureStepOverlay(
+                        step: captureStep,
+                        frontCaptured: frontImageData != nil,
+                        backCaptured: backImageData != nil,
+                        isAnalyzing: isAnalyzing
+                    )
+                    .padding()
                 }
 
-                if captureQuality == .good {
-                    Button("Review Captured Recipe", systemImage: "pencil.and.outline") {
-                        commitDetectedRecipe()
+                if let analysisMessage {
+                    Text(analysisMessage)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let frontImageData {
+                    CapturedPhotoStrip(
+                        frontImageData: frontImageData,
+                        backImageData: backImageData
+                    )
+                }
+
+                if isAnalyzing {
+                    ProgressView("Analyzing front and back card photos...")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else if let analysisResult {
+                    RecipePhotoAnalysisCard(analysisResult: analysisResult)
+
+                    HStack {
+                        Button(
+                            "Continue to Save Review",
+                            systemImage: "square.and.arrow.down.on.square",
+                            action: commitDetectedRecipe
+                        )
+                        .buttonStyle(.borderedProminent)
+
+                        Button("Retake Front", systemImage: "arrow.counterclockwise", action: retakeFrontPhoto)
+                            .buttonStyle(.bordered)
+
+                        Button("Retake Back", systemImage: "arrow.counterclockwise", action: retakeBackPhoto)
+                            .buttonStyle(.bordered)
                     }
-                    .buttonStyle(.borderedProminent)
                 } else {
-                    Button("Use Current Capture", systemImage: "checkmark.text.box") {
-                        commitDetectedRecipe()
+                    HStack {
+                        Button(captureStep.buttonTitle, systemImage: "camera", action: captureCurrentSide)
+                            .buttonStyle(.borderedProminent)
+
+                        if frontImageData != nil {
+                            Button("Start Over", systemImage: "arrow.counterclockwise", action: resetCapturedPhotos)
+                                .buttonStyle(.bordered)
+                        }
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                    Text(captureStep.helpText)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
     }
 
     private var scannerState: ScannerState {
-        if let scannerErrorMessage {
-            return .error(scannerErrorMessage)
+        if let fatalScannerErrorMessage {
+            return .error(fatalScannerErrorMessage)
         }
 
         switch cameraAuthorizationStatus {
@@ -127,28 +155,10 @@ struct LiveTitleScannerView: View {
         case .denied, .restricted:
             return .permissionDenied
         case .authorized:
-            guard DataScannerViewController.isSupported, DataScannerViewController.isAvailable else {
-                return .notSupported
-            }
             return .ready
         @unknown default:
-            return .notSupported
+            return .error("The camera authorization state is not supported on this device.")
         }
-    }
-
-    private var captureQuality: CaptureQuality {
-        let trimmedTitle = detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let wordCount = trimmedTitle.split(separator: " ").count
-
-        if trimmedTitle.isEmpty {
-            return .empty
-        }
-
-        if trimmedTitle.count < 12 || wordCount < 2 {
-            return .weak
-        }
-
-        return .good
     }
 
     private func requestCameraAccess() {
@@ -163,6 +173,10 @@ struct LiveTitleScannerView: View {
         }
     }
 
+    private func refreshCameraAuthorization() {
+        cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+    }
+
     private func openAppSettings() {
         guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
             return
@@ -171,56 +185,178 @@ struct LiveTitleScannerView: View {
         openURL(settingsURL)
     }
 
-    private func retryScanner() {
-        scannerErrorMessage = nil
-        detectedRecipe = DetectedRecipeText()
-        preferredTitle = nil
-        scannerSessionID = UUID()
-        cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
-    }
-
-    private func commitDetectedRecipe() {
-        let trimmedTitle = detectedRecipe.title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedTitle.isEmpty else {
-            return
-        }
-
-        onRecipeCaptured(
-            trimmedTitle,
-            detectedRecipe.subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
-            normalizedOptionalField(detectedRecipe.hellofreshCode)
-        )
+    private func closeScanner() {
         dismiss()
     }
 
-    private func normalizedOptionalField(_ value: String?) -> String? {
-        guard let value else {
-            return nil
+    private func captureCurrentSide() {
+        analysisMessage = nil
+        captureTrigger += 1
+    }
+
+    private func handleCapturedPhotoData(_ photoData: Data) {
+        analysisMessage = nil
+
+        switch captureStep {
+        case .front:
+            frontImageData = photoData
+            backImageData = nil
+            analysisResult = nil
+            captureStep = .back
+            analysisMessage = "Front photo captured. Flip the card and capture the back."
+        case .back:
+            backImageData = photoData
+            analysisMessage = "Back photo captured. Analyzing both sides now."
+            analyzeCapturedPhotos()
+        }
+    }
+
+    private func analyzeCapturedPhotos() {
+        guard let frontImageData, let backImageData else {
+            return
         }
 
-        let trimmedValue = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmedValue.isEmpty ? nil : trimmedValue
-    }
-}
+        analysisTask?.cancel()
+        isAnalyzing = true
+        analysisResult = nil
 
-private struct DetectedRecipeText: Equatable {
-    var title = ""
-    var subtitle = ""
-    var hellofreshCode: String?
+        analysisTask = Task {
+            do {
+                let analysisResult = try await RecipePhotoAnalyzer.analyze(
+                    frontImageData: frontImageData,
+                    backImageData: backImageData
+                )
+                guard !Task.isCancelled else {
+                    return
+                }
+
+                self.analysisResult = analysisResult
+                analysisMessage = "The card was analyzed. Review the detected recipe before saving it."
+                isAnalyzing = false
+            } catch {
+                guard !Task.isCancelled else {
+                    return
+                }
+
+                self.analysisResult = nil
+                analysisMessage = error.localizedDescription
+                isAnalyzing = false
+                captureStep = .back
+            }
+        }
+    }
+
+    private func commitDetectedRecipe() {
+        guard
+            let analysisResult,
+            let frontImageData,
+            let backImageData
+        else {
+            return
+        }
+
+        let payload = RecipeCapturePayload(
+            title: analysisResult.title,
+            subtitle: analysisResult.subtitle,
+            hellofreshCode: analysisResult.hellofreshCode,
+            sourceDescription: "two-photo scanner",
+            frontImageData: frontImageData,
+            backImageData: backImageData,
+            frontRecognizedText: analysisResult.frontRecognizedText,
+            backRecognizedText: analysisResult.backRecognizedText,
+            analysisSummary: analysisResult.analysisSummary
+        )
+
+        onRecipeCaptured(payload)
+        dismiss()
+    }
+
+    private func retakeFrontPhoto() {
+        analysisTask?.cancel()
+        captureStep = .front
+        frontImageData = nil
+        backImageData = nil
+        analysisResult = nil
+        isAnalyzing = false
+        analysisMessage = "Capture the front of the recipe card again."
+    }
+
+    private func retakeBackPhoto() {
+        analysisTask?.cancel()
+        captureStep = .back
+        backImageData = nil
+        analysisResult = nil
+        isAnalyzing = false
+        analysisMessage = "Capture the back of the recipe card again."
+    }
+
+    private func resetCapturedPhotos() {
+        analysisTask?.cancel()
+        captureStep = .front
+        frontImageData = nil
+        backImageData = nil
+        analysisResult = nil
+        isAnalyzing = false
+        analysisMessage = nil
+    }
+
+    private func resetScanner() {
+        fatalScannerErrorMessage = nil
+        resetCapturedPhotos()
+        refreshCameraAuthorization()
+    }
+
+    private func handleFatalScannerError(_ message: String) {
+        fatalScannerErrorMessage = message
+    }
 }
 
 private enum ScannerState {
     case ready
     case needsPermission
     case permissionDenied
-    case notSupported
     case error(String)
 }
 
-private enum CaptureQuality {
-    case empty
-    case weak
-    case good
+private enum CaptureStep {
+    case front
+    case back
+
+    var buttonTitle: String {
+        switch self {
+        case .front:
+            return "Capture Front Photo"
+        case .back:
+            return "Capture Back Photo"
+        }
+    }
+
+    var helpText: String {
+        switch self {
+        case .front:
+            return "Capture the front of the card."
+        case .back:
+            return "Turn the card over and capture the back."
+        }
+    }
+
+    var overlayTitle: String {
+        switch self {
+        case .front:
+            return "Step 1 of 2"
+        case .back:
+            return "Step 2 of 2"
+        }
+    }
+
+    var overlayMessage: String {
+        switch self {
+        case .front:
+            return "Capture the front of the recipe card."
+        case .back:
+            return "Capture the back of the recipe card."
+        }
+    }
 }
 
 private struct ScannerStateCard: View {
@@ -239,230 +375,114 @@ private struct ScannerStateCard: View {
         .overlay(alignment: .bottom) {
             Button(primaryActionTitle, action: primaryAction)
                 .buttonStyle(.borderedProminent)
+                .padding(.bottom)
         }
-        .padding(.bottom, 56)
     }
 }
 
-private struct ScannerOverlayCard: View {
-    let detectedRecipe: DetectedRecipeText
-    let captureQuality: CaptureQuality
+private struct CaptureStepOverlay: View {
+    let step: CaptureStep
+    let frontCaptured: Bool
+    let backCaptured: Bool
+    let isAnalyzing: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
+            Text(isAnalyzing ? "Analyzing Card Photos" : step.overlayTitle)
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            Text(isAnalyzing ? "Reading the captured front and back photos." : step.overlayMessage)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.9))
+
+            HStack(spacing: 12) {
+                Label(frontCaptured ? "Front Ready" : "Front Pending", systemImage: frontCaptured ? "checkmark.circle.fill" : "circle")
+                Label(backCaptured ? "Back Ready" : "Back Pending", systemImage: backCaptured ? "checkmark.circle.fill" : "circle")
+            }
+            .font(.footnote)
+            .foregroundStyle(.white.opacity(0.95))
+        }
+        .padding(14)
+        .background(.black.opacity(0.55), in: .rect(cornerRadius: 20))
+    }
+}
+
+private struct CapturedPhotoStrip: View {
+    let frontImageData: Data
+    let backImageData: Data?
+
+    var body: some View {
+        HStack(spacing: 12) {
+            CapturedPhotoThumbnail(
+                title: "Front",
+                imageData: frontImageData
+            )
+
+            if let backImageData {
+                CapturedPhotoThumbnail(
+                    title: "Back",
+                    imageData: backImageData
+                )
+            }
+        }
+    }
+}
+
+private struct CapturedPhotoThumbnail: View {
+    let title: String
+    let imageData: Data
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            if let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 112)
+                    .clipShape(.rect(cornerRadius: 18))
+            } else {
+                ContentUnavailableView(
+                    "Photo Unavailable",
+                    systemImage: "photo"
+                )
+                .frame(height: 112)
+            }
+        }
+    }
+}
+
+private struct RecipePhotoAnalysisCard: View {
+    let analysisResult: RecipePhotoAnalysis
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Detected Recipe")
                 .font(.headline)
 
-            Text(detectedRecipe.title.isEmpty ? "No title captured yet" : detectedRecipe.title)
-                .bold()
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(analysisResult.title)
+                    .font(.title3)
+                    .bold()
 
-            if !detectedRecipe.subtitle.isEmpty {
-                Text(detectedRecipe.subtitle)
-                    .foregroundStyle(.secondary)
-            }
-
-            if let hellofreshCode = detectedRecipe.hellofreshCode {
-                Label(hellofreshCode, systemImage: "number.square")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-
-            Text(qualityMessage)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .foregroundStyle(qualityStyle)
-        }
-        .padding()
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
-    }
-
-    private var qualityMessage: String {
-        switch captureQuality {
-        case .empty:
-            return "Point the camera at the printed recipe title."
-        case .weak:
-            return "Low-confidence capture."
-        case .good:
-            return "Looks good."
-        }
-    }
-
-    private var qualityStyle: AnyShapeStyle {
-        switch captureQuality {
-        case .empty:
-            return AnyShapeStyle(.secondary)
-        case .weak:
-            return AnyShapeStyle(.orange)
-        case .good:
-            return AnyShapeStyle(.green)
-        }
-    }
-}
-
-private struct DataScannerContainerView: UIViewControllerRepresentable {
-    @Binding var detectedRecipe: DetectedRecipeText
-    @Binding var preferredTitle: String?
-    @Binding var scannerErrorMessage: String?
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(
-            detectedRecipe: $detectedRecipe,
-            preferredTitle: $preferredTitle,
-            scannerErrorMessage: $scannerErrorMessage
-        )
-    }
-
-    func makeUIViewController(context: Context) -> DataScannerViewController {
-        let scannerViewController = DataScannerViewController(
-            recognizedDataTypes: [
-                .text(
-                    languages: ["en", "de"],
-                    textContentType: nil
-                ),
-            ],
-            qualityLevel: .balanced,
-            recognizesMultipleItems: true,
-            isHighFrameRateTrackingEnabled: true,
-            isPinchToZoomEnabled: true,
-            isGuidanceEnabled: true,
-            isHighlightingEnabled: true
-        )
-        scannerViewController.delegate = context.coordinator
-        return scannerViewController
-    }
-
-    func updateUIViewController(_ uiViewController: DataScannerViewController, context: Context) {
-        if !uiViewController.isScanning {
-            do {
-                try uiViewController.startScanning()
-                scannerErrorMessage = nil
-            } catch {
-                context.coordinator.reportScannerError(error)
-            }
-        }
-    }
-
-    static func dismantleUIViewController(_ uiViewController: DataScannerViewController, coordinator: Coordinator) {
-        uiViewController.stopScanning()
-    }
-
-    final class Coordinator: NSObject, DataScannerViewControllerDelegate {
-        @Binding private var detectedRecipe: DetectedRecipeText
-        @Binding private var preferredTitle: String?
-        @Binding private var scannerErrorMessage: String?
-        private var latestTextLines: [RecipeCardTextLine] = []
-
-        init(
-            detectedRecipe: Binding<DetectedRecipeText>,
-            preferredTitle: Binding<String?>,
-            scannerErrorMessage: Binding<String?>
-        ) {
-            _detectedRecipe = detectedRecipe
-            _preferredTitle = preferredTitle
-            _scannerErrorMessage = scannerErrorMessage
-        }
-
-        func dataScanner(
-            _ dataScanner: DataScannerViewController,
-            didAdd addedItems: [RecognizedItem],
-            allItems: [RecognizedItem]
-        ) {
-            updateDetectedRecipe(from: allItems.isEmpty ? addedItems : allItems)
-        }
-
-        func dataScanner(
-            _ dataScanner: DataScannerViewController,
-            didUpdate updatedItems: [RecognizedItem],
-            allItems: [RecognizedItem]
-        ) {
-            updateDetectedRecipe(from: allItems.isEmpty ? updatedItems : allItems)
-        }
-
-        func dataScanner(
-            _ dataScanner: DataScannerViewController,
-            didTapOn item: RecognizedItem
-        ) {
-            if case let .text(text) = item {
-                preferredTitle = text.transcript.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-
-            if latestTextLines.isEmpty, case let .text(text) = item {
-                latestTextLines = [
-                    RecipeCardTextLine(
-                        transcript: text.transcript,
-                        frame: boundingRect(for: text.bounds)
-                    ),
-                ]
-            }
-
-            updateDetectedRecipe(from: latestTextLines)
-        }
-
-        func reportScannerError(_ error: Error) {
-            detectedRecipe = DetectedRecipeText()
-            scannerErrorMessage = error.localizedDescription
-        }
-
-        private func updateDetectedRecipe(from items: [RecognizedItem]) {
-            latestTextLines = items.compactMap { item -> RecipeCardTextLine? in
-                guard case let .text(text) = item else {
-                    return nil
+                if !analysisResult.subtitle.isEmpty {
+                    Text(analysisResult.subtitle)
+                        .foregroundStyle(.secondary)
                 }
 
-                return RecipeCardTextLine(
-                    transcript: text.transcript,
-                    frame: boundingRect(for: text.bounds)
-                )
+                if let hellofreshCode = analysisResult.hellofreshCode {
+                    Label(hellofreshCode, systemImage: "number.square")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
-
-            updateDetectedRecipe(from: latestTextLines)
         }
-
-        private func updateDetectedRecipe(from lines: [RecipeCardTextLine]) {
-            guard let parsedRecipe = RecipeCardTextParser.parse(
-                from: lines,
-                preferredTitle: preferredTitle
-            ) else {
-                return
-            }
-
-            scannerErrorMessage = nil
-            detectedRecipe = DetectedRecipeText(
-                title: parsedRecipe.title,
-                subtitle: parsedRecipe.subtitle,
-                hellofreshCode: parsedRecipe.hellofreshCode
-            )
-        }
-
-        private func boundingRect(for bounds: RecognizedItem.Bounds) -> CGRect {
-            let xValues = [
-                bounds.topLeft.x,
-                bounds.topRight.x,
-                bounds.bottomLeft.x,
-                bounds.bottomRight.x,
-            ]
-            let yValues = [
-                bounds.topLeft.y,
-                bounds.topRight.y,
-                bounds.bottomLeft.y,
-                bounds.bottomRight.y,
-            ]
-            let minX = xValues.min() ?? 0
-            let maxX = xValues.max() ?? 0
-            let minY = yValues.min() ?? 0
-            let maxY = yValues.max() ?? 0
-
-            return CGRect(
-                x: minX,
-                y: minY,
-                width: maxX - minX,
-                height: maxY - minY
-            )
-        }
+        .padding(AppStyle.cardPadding)
+        .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
     }
-}
-
-#Preview {
-    LiveTitleScannerView { _, _, _ in }
 }

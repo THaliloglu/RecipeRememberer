@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct PendingSaveCard: View {
     @Environment(AppModel.self) private var appModel
@@ -24,6 +25,9 @@ struct PendingSaveCard: View {
 }
 
 private struct PendingRecipeDraftEditor: View {
+    @Environment(AppModel.self) private var appModel
+    @Environment(\.modelContext) private var modelContext
+
     let draft: AppModel.PendingRecipeDraft
     let onSave: (String, String, String) -> Void
     let onDismiss: () -> Void
@@ -31,6 +35,7 @@ private struct PendingRecipeDraftEditor: View {
     @State private var title: String
     @State private var subtitle: String
     @State private var hellofreshCode: String
+    @State private var duplicateRecipe: StoredRecipe?
 
     init(
         draft: AppModel.PendingRecipeDraft,
@@ -47,11 +52,12 @@ private struct PendingRecipeDraftEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Review Before Saving")
+            Text("Review Recipe")
                 .font(.headline)
 
-            Text("Edit the detected recipe if needed, then save it to your local library.")
-                .foregroundStyle(.secondary)
+            if let capturePayload = draft.capturePayload {
+                PendingCapturedPhotoStrip(capturePayload: capturePayload)
+            }
 
             TextField("Recipe title", text: $title)
                 .textFieldStyle(.roundedBorder)
@@ -66,8 +72,15 @@ private struct PendingRecipeDraftEditor: View {
             .textFieldStyle(.roundedBorder)
             .textInputAutocapitalization(.characters)
 
-            if !draft.sourceDescription.isEmpty {
-                Text("Detected from \(draft.sourceDescription). Saved recipes stay on this device unless you add sync later.")
+            if let duplicateRecipe {
+                Label(
+                    "Already saved as \(duplicateRecipe.title).",
+                    systemImage: "checkmark.circle.fill"
+                )
+                .font(.footnote)
+                .foregroundStyle(.orange)
+            } else if !draft.sourceDescription.isEmpty {
+                Text("Detected from \(draft.sourceDescription).")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -76,7 +89,11 @@ private struct PendingRecipeDraftEditor: View {
                 Button("Save Recipe", systemImage: "square.and.arrow.down") {
                     onSave(title, subtitle, hellofreshCode)
                 }
-                    .buttonStyle(.borderedProminent)
+                .buttonStyle(.borderedProminent)
+                .disabled(
+                    title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        || duplicateRecipe != nil
+                )
 
                 Button("Not Now", systemImage: "xmark", action: onDismiss)
                     .buttonStyle(.bordered)
@@ -84,5 +101,72 @@ private struct PendingRecipeDraftEditor: View {
         }
         .padding(AppStyle.cardPadding)
         .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
+        .task {
+            refreshDuplicateRecipe()
+        }
+        .onChange(of: title) { _, _ in
+            refreshDuplicateRecipe()
+        }
+        .onChange(of: subtitle) { _, _ in
+            refreshDuplicateRecipe()
+        }
+        .onChange(of: hellofreshCode) { _, _ in
+            refreshDuplicateRecipe()
+        }
+    }
+
+    private func refreshDuplicateRecipe() {
+        duplicateRecipe = appModel.duplicateRecipe(
+            title: title,
+            subtitle: subtitle,
+            hellofreshCode: hellofreshCode,
+            capturePayload: draft.capturePayload,
+            using: modelContext
+        )
+    }
+}
+
+private struct PendingCapturedPhotoStrip: View {
+    let capturePayload: RecipeCapturePayload
+
+    var body: some View {
+        HStack(spacing: 12) {
+            PendingCapturedPhotoThumbnail(
+                title: "Front",
+                imageData: capturePayload.frontImageData
+            )
+            PendingCapturedPhotoThumbnail(
+                title: "Back",
+                imageData: capturePayload.backImageData
+            )
+        }
+    }
+}
+
+private struct PendingCapturedPhotoThumbnail: View {
+    let title: String
+    let imageData: Data
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            if let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 112)
+                    .clipShape(.rect(cornerRadius: 18))
+            } else {
+                ContentUnavailableView(
+                    "Photo Unavailable",
+                    systemImage: "photo"
+                )
+                .frame(height: 112)
+            }
+        }
     }
 }

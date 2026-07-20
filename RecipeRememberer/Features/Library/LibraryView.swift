@@ -15,12 +15,6 @@ struct LibraryView: View {
         @Bindable var appModel = appModel
 
         VStack(alignment: .leading, spacing: 12) {
-            LocalLibraryNoticeCard(
-                title: "Local Recipe Library",
-                message: "Recipes are stored only on this device right now. You can rename or delete them whenever you want.",
-                caption: "This app is not affiliated with HelloFresh."
-            )
-
             Group {
                 if filteredRecipes.isEmpty {
                     if appModel.librarySearchText.isEmpty {
@@ -35,7 +29,12 @@ struct LibraryView: View {
                 } else {
                     List {
                         ForEach(filteredRecipes) { recipe in
-                            SavedRecipeRow(recipe: recipe)
+                            Button {
+                                recipeBeingEdited = recipe
+                            } label: {
+                                SavedRecipeRow(recipe: recipe)
+                            }
+                            .buttonStyle(.plain)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button("Delete", systemImage: "trash", role: .destructive) {
                                         recipePendingDeletion = recipe

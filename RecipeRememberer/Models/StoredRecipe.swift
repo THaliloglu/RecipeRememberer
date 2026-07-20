@@ -9,6 +9,11 @@ final class StoredRecipe {
     var normalizedTitle: String = ""
     var normalizedSubtitle: String = ""
     var sourceDescription: String = ""
+    var frontPhotoFilename: String?
+    var backPhotoFilename: String?
+    var frontRecognizedText: String = ""
+    var backRecognizedText: String = ""
+    var analysisSummary: String = ""
     var savedAt: Date = Foundation.Date.now
     var updatedAt: Date = Foundation.Date.now
 
@@ -16,12 +21,22 @@ final class StoredRecipe {
         title: String,
         subtitle: String,
         hellofreshCode: String?,
-        sourceDescription: String
+        sourceDescription: String,
+        frontPhotoFilename: String? = nil,
+        backPhotoFilename: String? = nil,
+        frontRecognizedText: String = "",
+        backRecognizedText: String = "",
+        analysisSummary: String = ""
     ) {
         self.title = title
         self.subtitle = subtitle
         self.hellofreshCode = hellofreshCode
         self.sourceDescription = sourceDescription
+        self.frontPhotoFilename = frontPhotoFilename
+        self.backPhotoFilename = backPhotoFilename
+        self.frontRecognizedText = frontRecognizedText
+        self.backRecognizedText = backRecognizedText
+        self.analysisSummary = analysisSummary
         refreshNormalizedFields()
     }
 
@@ -43,8 +58,14 @@ final class StoredRecipe {
             subtitle: subtitle,
             normalizedTitle: normalizedTitle,
             normalizedSubtitle: normalizedSubtitle,
-            hellofreshCode: hellofreshCode
+            hellofreshCode: hellofreshCode,
+            frontRecognizedText: frontRecognizedText,
+            backRecognizedText: backRecognizedText
         )
+    }
+
+    var savedPhotoCount: Int {
+        [frontPhotoFilename, backPhotoFilename].compactMap(\.self).count
     }
 
     private func refreshNormalizedFields() {
