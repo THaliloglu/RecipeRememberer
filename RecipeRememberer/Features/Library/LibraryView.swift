@@ -10,6 +10,7 @@ struct LibraryView: View {
     @State private var recipeBeingEdited: StoredRecipe?
     @State private var recipePendingDeletion: StoredRecipe?
     @State private var isDeleteDialogPresented = false
+    @State private var hasAutoOpenedUITestRecipe = false
 
     var body: some View {
         @Bindable var appModel = appModel
@@ -33,23 +34,29 @@ struct LibraryView: View {
                                 recipeBeingEdited = recipe
                             } label: {
                                 SavedRecipeRow(recipe: recipe)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    Button("Delete", systemImage: "trash", role: .destructive) {
-                                        recipePendingDeletion = recipe
-                                        isDeleteDialogPresented = true
-                                    }
-
-                                    Button("Rename", systemImage: "pencil") {
-                                        recipeBeingEdited = recipe
-                                    }
-                                    .tint(.blue)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button("Delete", systemImage: "trash", role: .destructive) {
+                                    recipePendingDeletion = recipe
+                                    isDeleteDialogPresented = true
                                 }
+
+                                Button("Rename", systemImage: "pencil") {
+                                    recipeBeingEdited = recipe
+                                }
+                                .tint(.blue)
+                            }
+                            .listRowInsets(.init(top: 6, leading: 0, bottom: 6, trailing: 0))
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
                     }
-                    .scrollIndicators(.hidden)
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .scrollIndicators(.hidden)
+                    .animation(.snappy(duration: 0.28, extraBounce: 0), value: filteredRecipeIDs)
                 }
             }
         }
@@ -68,7 +75,9 @@ struct LibraryView: View {
         ) {
             if let recipePendingDeletion {
                 Button("Delete", role: .destructive) {
-                    appModel.deleteRecipe(recipePendingDeletion, using: modelContext)
+                    withAnimation(.snappy(duration: 0.28, extraBounce: 0)) {
+                        appModel.deleteRecipe(recipePendingDeletion, using: modelContext)
+                    }
                     self.recipePendingDeletion = nil
                 }
             }
@@ -84,6 +93,22 @@ struct LibraryView: View {
                 recipePendingDeletion = nil
             }
         }
+        .task(id: savedRecipes.count) {
+            guard UITestLaunchConfiguration.shouldAutoOpenRecipe else {
+                return
+            }
+
+            guard !hasAutoOpenedUITestRecipe else {
+                return
+            }
+
+            guard let firstRecipe = savedRecipes.first else {
+                return
+            }
+
+            recipeBeingEdited = firstRecipe
+            hasAutoOpenedUITestRecipe = true
+        }
     }
 
     private var filteredRecipes: [StoredRecipe] {
@@ -96,5 +121,9 @@ struct LibraryView: View {
                 || recipe.subtitle.localizedStandardContains(appModel.librarySearchText)
                 || (recipe.hellofreshCode ?? "").localizedStandardContains(appModel.librarySearchText)
         }
+    }
+
+    private var filteredRecipeIDs: [PersistentIdentifier] {
+        filteredRecipes.map(\.persistentModelID)
     }
 }

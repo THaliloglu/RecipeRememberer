@@ -9,21 +9,28 @@ public enum RecipeMatcher {
         let detectedTokens = Set(RecipeNormalizer.normalizedTokens(for: detectedText))
 
         let scoredMatches = catalog.map { entry in
-            (entry, score(for: entry, in: normalizedText, tokens: detectedTokens))
+            (
+                entry,
+                signal(for: entry, in: normalizedText, tokens: detectedTokens)
+            )
         }
 
-        guard let bestMatch = scoredMatches.max(by: { $0.1 < $1.1 }), bestMatch.1 >= 6 else {
+        guard
+            let bestMatch = scoredMatches.max(by: { $0.1.score < $1.1.score }),
+            bestMatch.1.score >= 6,
+            bestMatch.1.hasIdentitySignal
+        else {
             return nil
         }
 
         return bestMatch.0
     }
 
-    private static func score(
+    private static func signal(
         for entry: RecipeCatalogEntry,
         in normalizedText: String,
         tokens: Set<String>
-    ) -> Int {
+    ) -> MatchSignal {
         var total = 0
 
         let normalizedTitle = RecipeNormalizer.normalizedKey(for: entry.title)
@@ -34,15 +41,19 @@ public enum RecipeMatcher {
         let sharedTitleTokens = titleTokens.intersection(tokens).count
         let sharedSubtitleTokens = subtitleTokens.intersection(tokens).count
 
-        if normalizedText.contains(normalizedTitle) {
+        let containsWholeTitle = normalizedText.contains(normalizedTitle)
+        let containsWholeSubtitle = normalizedText.contains(normalizedSubtitle)
+        let containsCode = normalizedText.contains(normalizedCode)
+
+        if containsWholeTitle {
             total += 8
         }
 
-        if normalizedText.contains(normalizedSubtitle) {
+        if containsWholeSubtitle {
             total += 4
         }
 
-        if normalizedText.contains(normalizedCode) {
+        if containsCode {
             total += 10
         }
 
@@ -60,6 +71,17 @@ public enum RecipeMatcher {
             }
         }
 
-        return total
+        return MatchSignal(
+            score: total,
+            hasIdentitySignal: containsCode
+                || containsWholeTitle
+                || sharedTitleTokens >= 2
+                || (sharedTitleTokens >= 1 && sharedSubtitleTokens >= 2)
+        )
     }
+}
+
+private struct MatchSignal {
+    let score: Int
+    let hasIdentitySignal: Bool
 }

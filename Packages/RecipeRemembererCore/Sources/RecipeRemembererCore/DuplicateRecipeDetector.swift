@@ -69,12 +69,18 @@ public enum DuplicateRecipeDetector {
             let sharedFrontRecognizedTextTokens = frontRecognizedTextTokens.intersection(detectedTokens).count
             let sharedBackRecognizedTextTokens = backRecognizedTextTokens.intersection(detectedTokens).count
             let hasStrongTitleSignal: Bool
+            let hasCodeSignal: Bool
             var score = 0
 
             if let code = savedRecipe.hellofreshCode,
-               !code.isEmpty,
-               normalizedDetectedText.contains(RecipeNormalizer.normalizedKey(for: code)) {
-                score += 14
+               !code.isEmpty {
+                let normalizedCode = RecipeNormalizer.normalizedKey(for: code)
+                hasCodeSignal = normalizedDetectedText.contains(normalizedCode)
+                if hasCodeSignal {
+                    score += 14
+                }
+            } else {
+                hasCodeSignal = false
             }
 
             if titleTokens.count >= 3, sharedTitleTokens >= titleTokens.count - 1 {
@@ -127,7 +133,7 @@ public enum DuplicateRecipeDetector {
                 sharedSubtitleTokens,
                 sharedFrontRecognizedTextTokens,
                 hasStrongTitleSignal,
-                savedRecipe.hellofreshCode != nil
+                hasCodeSignal
             )
         }
 

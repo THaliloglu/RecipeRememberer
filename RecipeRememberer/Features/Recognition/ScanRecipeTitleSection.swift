@@ -56,6 +56,7 @@ struct ScanRecipeTitleSection: View {
                 .padding(.vertical, 14)
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityIdentifier("scanner.open")
             .accessibilityHint("Opens the camera to capture the front and back of a printed recipe card.")
 
             HStack(spacing: 12) {
@@ -78,10 +79,8 @@ struct ScanRecipeTitleSection: View {
         }
         .padding(AppStyle.cardPadding)
         .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
-        .sheet(isPresented: $isLiveScannerPresented) {
-            LiveTitleScannerView { capture in
-                appModel.scanCapturedRecipe(capture, using: modelContext)
-            }
+        .fullScreenCover(isPresented: $isLiveScannerPresented) {
+            LiveTitleScannerView()
         }
     }
 

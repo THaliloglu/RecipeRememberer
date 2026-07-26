@@ -48,20 +48,23 @@ public enum RecipeCardTextParser {
             around: anchorIndex,
             in: preparedLines
         )
-        let title = preparedLines[titleRange]
+        let title = cleanedDisplayText(
+            preparedLines[titleRange]
             .map(\.transcript)
             .joined(separator: " ")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        )
 
         guard !title.isEmpty else {
             return nil
         }
 
-        let subtitle = subtitleCandidate(
+        let subtitle = cleanedDisplayText(
+            subtitleCandidate(
             after: titleRange.upperBound,
             in: preparedLines,
             titleFrame: preparedLines[titleRange.lowerBound].frame
-        ) ?? ""
+            ) ?? ""
+        )
 
         let hellofreshCode = preparedLines.lazy
             .compactMap(\.recognizedCode)
@@ -206,6 +209,12 @@ public enum RecipeCardTextParser {
             + topBias
             - (line.isMetadata ? 300 : 0)
             - (line.recognizedCode == nil ? 0 : 80)
+    }
+
+    private static func cleanedDisplayText(_ text: String) -> String {
+        text.trimmingCharacters(
+            in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        )
     }
 
     private static var titleWords: [String] {

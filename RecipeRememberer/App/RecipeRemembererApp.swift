@@ -7,9 +7,13 @@ struct RecipeRemembererApp: App {
 
     private let modelContainer: ModelContainer = {
         let schema = Schema([StoredRecipe.self])
+        let configuration = ModelConfiguration(
+            isStoredInMemoryOnly: UITestLaunchConfiguration.shouldSeedLibrary
+                || UITestLaunchConfiguration.shouldUseMockScannerCapture
+        )
 
         do {
-            return try ModelContainer(for: schema)
+            return try ModelContainer(for: schema, configurations: configuration)
         } catch {
             fatalError("Unable to create model container: \(error.localizedDescription)")
         }
@@ -19,6 +23,9 @@ struct RecipeRemembererApp: App {
         WindowGroup("Recipe Rememberer", id: "mainWindow") {
             RootView()
                 .environment(appModel)
+                .task {
+                    UITestRecipeSeeder.seedLibraryIfNeeded(in: modelContainer)
+                }
         }
         .modelContainer(modelContainer)
     }

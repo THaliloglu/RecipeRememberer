@@ -114,6 +114,43 @@ func duplicateDetectorAllowsNearMatchInsteadOfExactEquality() {
 }
 
 @Test
+func duplicateDetectorDoesNotCollapseDistinctRecipeTitlesIntoSavedRecipe() {
+    let savedRecipes = [
+        SavedRecipeSnapshot(
+            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
+            subtitle: "Kartoffeln und Porree",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
+            hellofreshCode: "HF-DE-21",
+            frontRecognizedText: """
+            HELLO FRESH
+            Italienisches Gratin mit Bio-Rinderhackfleisch
+            Kartoffeln und Porree
+            Viel Gemüse High Protein Kalorien im Blick 35 - 45 Min 613 kcal
+            """,
+            backRecognizedText: """
+            Ofenkartoffel
+            Zwiebel
+            Knoblauchzehe
+            Porree
+            """
+        ),
+    ]
+
+    let match = DuplicateRecipeDetector.bestTitleMatch(
+        for: """
+        HELLO FRESH
+        Hähnchenfilets in sticky Orangen-Zwiebelsoße
+        mit Brokkoli und Rosmarin-Kartoffelspalten
+        Viel Gemüse High Protein Schnell 25 - 35 Min 688 kcal
+        """,
+        among: savedRecipes
+    )
+
+    #expect(match == nil)
+}
+
+@Test
 func duplicateDetectorMatchesOnTitleAndSubtitleTokens() {
     let savedRecipes = [
         SavedRecipeSnapshot(

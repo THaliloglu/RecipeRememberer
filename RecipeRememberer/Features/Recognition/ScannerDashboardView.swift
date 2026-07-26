@@ -2,16 +2,11 @@ import SwiftUI
 
 struct ScannerDashboardView: View {
     @Environment(AppModel.self) private var appModel
-    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppStyle.sectionSpacing) {
                 ScanRecipeTitleSection()
-
-                if appModel.latestTitleScanResult.stage != .idle {
-                    TitleScanStatusCard(result: appModel.latestTitleScanResult)
-                }
 
                 if let feedback = appModel.latestFeedback {
                     RecognitionFeedbackCard(feedback: feedback)

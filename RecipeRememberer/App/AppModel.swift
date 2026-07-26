@@ -254,7 +254,7 @@ final class AppModel {
             capturePayload: draft.capturePayload,
             using: modelContext
         ) != nil {
-            pendingRecipeDraft = nil
+            pendingRecipeDraft = draft
             latestFeedback = RecognitionFeedback(
                 title: draft.title,
                 message: "This recipe is already saved in your local library.",
@@ -716,6 +716,12 @@ final class AppModel {
         do {
             try modelContext.save()
             pendingRecipeDraft = nil
+            librarySearchText = ""
+            latestTitleScanResult = TitleScanResult(
+                title: draft.title,
+                message: "Saved to your local recipe library.",
+                stage: .newRecipe
+            )
             latestFeedback = RecognitionFeedback(
                 title: draft.title,
                 message: "Saved to your local recipe library from \(draft.sourceDescription).",
@@ -734,6 +740,11 @@ final class AppModel {
                 message: "The recipe was recognized, but saving it failed.",
                 style: .warning,
                 recipeID: draft.id
+            )
+            latestTitleScanResult = TitleScanResult(
+                title: draft.title,
+                message: "The recipe could not be saved. Review it and try again.",
+                stage: .failed
             )
         }
     }

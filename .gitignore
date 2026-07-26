@@ -13,3 +13,4 @@ Packages/*/.build/
 
 # Simulator and local tooling
 *.log
+*.xcresult

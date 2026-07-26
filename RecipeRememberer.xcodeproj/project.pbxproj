@@ -37,7 +37,23 @@
 		A000004E000000000000004E /* RecipePhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012E000000000000012E /* RecipePhotoStore.swift */; };
 		A000004F000000000000004F /* RecipePhotoAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000012F000000000000012F /* RecipePhotoAnalyzer.swift */; };
 		A00000500000000000000050 /* RecipeCardCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001300000000000000130 /* RecipeCardCameraView.swift */; };
+		A00000510000000000000051 /* SavedRecipePhotoGallerySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001310000000000000131 /* SavedRecipePhotoGallerySection.swift */; };
+		A00000520000000000000052 /* UITestLaunchConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001320000000000000132 /* UITestLaunchConfiguration.swift */; };
+		A00000530000000000000053 /* RecipeRemembererUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001340000000000000134 /* RecipeRemembererUITests.swift */; };
+		A00000640000000000000064 /* SavedRecipeRowThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001350000000000000135 /* SavedRecipeRowThumbnail.swift */; };
+		A00000650000000000000065 /* RecipePhotoCropGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001360000000000000136 /* RecipePhotoCropGeometry.swift */; };
+		A00000660000000000000066 /* SavedRecipePhotoActionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001370000000000000137 /* SavedRecipePhotoActionLayout.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00000540000000000000054 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A000000F000000000000000F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A000000E000000000000000E;
+			remoteInfo = RecipeRememberer;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A00000030000000000000003 /* RecipeRememberer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeRememberer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,11 +66,11 @@
 		A00001060000000000000106 /* SavedRecipeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipeRow.swift; sourceTree = "<group>"; };
 		A00001070000000000000107 /* RecognitionFeedbackCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognitionFeedbackCard.swift; sourceTree = "<group>"; };
 		A00001080000000000000108 /* PendingSaveCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSaveCard.swift; sourceTree = "<group>"; };
+		A00001120000000000000112 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A00001130000000000000113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A00001180000000000000118 /* ScanRecipeTitleSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRecipeTitleSection.swift; sourceTree = "<group>"; };
 		A00001190000000000000119 /* LiveTitleScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTitleScannerView.swift; sourceTree = "<group>"; };
 		A000011A000000000000011A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A00001120000000000000112 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A00001130000000000000113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A00001200000000000000120 /* RecipeCatalogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCatalogEntry.swift; sourceTree = "<group>"; };
 		A00001210000000000000121 /* RecipeMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeMatcher.swift; sourceTree = "<group>"; };
 		A00001220000000000000122 /* RecipeNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeNormalizer.swift; sourceTree = "<group>"; };
@@ -72,10 +88,24 @@
 		A000012E000000000000012E /* RecipePhotoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePhotoStore.swift; sourceTree = "<group>"; };
 		A000012F000000000000012F /* RecipePhotoAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePhotoAnalyzer.swift; sourceTree = "<group>"; };
 		A00001300000000000000130 /* RecipeCardCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCardCameraView.swift; sourceTree = "<group>"; };
+		A00001310000000000000131 /* SavedRecipePhotoGallerySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipePhotoGallerySection.swift; sourceTree = "<group>"; };
+		A00001320000000000000132 /* UITestLaunchConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestLaunchConfiguration.swift; sourceTree = "<group>"; };
+		A00001330000000000000133 /* RecipeRemembererUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeRemembererUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00001340000000000000134 /* RecipeRemembererUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRemembererUITests.swift; sourceTree = "<group>"; };
+		A00001350000000000000135 /* SavedRecipeRowThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipeRowThumbnail.swift; sourceTree = "<group>"; };
+		A00001360000000000000136 /* RecipePhotoCropGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePhotoCropGeometry.swift; sourceTree = "<group>"; };
+		A00001370000000000000137 /* SavedRecipePhotoActionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipePhotoActionLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A00000230000000000000023 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000550000000000000055 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -90,6 +120,7 @@
 			children = (
 				A00000060000000000000006 /* RecipeRememberer */,
 				A00000070000000000000007 /* Packages/RecipeRemembererCore/Sources/RecipeRemembererCore */,
+				A00000560000000000000056 /* RecipeRemembererUITests */,
 				A00000080000000000000008 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +147,8 @@
 				A00001230000000000000123 /* SampleRecipeCatalog.swift */,
 				A00001240000000000000124 /* SavedRecipeSnapshot.swift */,
 				A00001250000000000000125 /* DuplicateRecipeDetector.swift */,
+				A00001360000000000000136 /* RecipePhotoCropGeometry.swift */,
+				A00001370000000000000137 /* SavedRecipePhotoActionLayout.swift */,
 				A000012B000000000000012B /* RecipeCardTextParser.swift */,
 			);
 			path = Packages/RecipeRemembererCore/Sources/RecipeRemembererCore;
@@ -125,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000030000000000000003 /* RecipeRememberer.app */,
+				A00001330000000000000133 /* RecipeRemembererUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,6 +170,7 @@
 				A00001010000000000000101 /* AppModel.swift */,
 				A000012A000000000000012A /* AppStyle.swift */,
 				A00001020000000000000102 /* RootView.swift */,
+				A00001320000000000000132 /* UITestLaunchConfiguration.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -159,32 +194,42 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
-			A000000C000000000000000C /* Library */ = {
-				isa = PBXGroup;
-				children = (
-					A00001290000000000000129 /* EditRecipeSheet.swift */,
-					A00001050000000000000105 /* LibraryView.swift */,
-					A00001060000000000000106 /* SavedRecipeRow.swift */,
-				);
+		A000000C000000000000000C /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				A00001290000000000000129 /* EditRecipeSheet.swift */,
+				A00001050000000000000105 /* LibraryView.swift */,
+				A00001060000000000000106 /* SavedRecipeRow.swift */,
+				A00001350000000000000135 /* SavedRecipeRowThumbnail.swift */,
+				A00001310000000000000131 /* SavedRecipePhotoGallerySection.swift */,
+			);
 			path = Library;
 			sourceTree = "<group>";
 		};
-			A000000D000000000000000D /* Recognition */ = {
-				isa = PBXGroup;
-				children = (
-					A00001270000000000000127 /* LocalLibraryNoticeCard.swift */,
-					A00001300000000000000130 /* RecipeCardCameraView.swift */,
-					A000012F000000000000012F /* RecipePhotoAnalyzer.swift */,
-					A00001040000000000000104 /* ScannerDashboardView.swift */,
-					A000012C000000000000012C /* RecentScanHistorySection.swift */,
-					A00001280000000000000128 /* RecentSavedRecipesSection.swift */,
-					A00001070000000000000107 /* RecognitionFeedbackCard.swift */,
-					A00001080000000000000108 /* PendingSaveCard.swift */,
-					A00001180000000000000118 /* ScanRecipeTitleSection.swift */,
-					A00001190000000000000119 /* LiveTitleScannerView.swift */,
-					A00001260000000000000126 /* TitleScanStatusCard.swift */,
-				);
+		A000000D000000000000000D /* Recognition */ = {
+			isa = PBXGroup;
+			children = (
+				A00001270000000000000127 /* LocalLibraryNoticeCard.swift */,
+				A00001300000000000000130 /* RecipeCardCameraView.swift */,
+				A000012F000000000000012F /* RecipePhotoAnalyzer.swift */,
+				A00001040000000000000104 /* ScannerDashboardView.swift */,
+				A000012C000000000000012C /* RecentScanHistorySection.swift */,
+				A00001280000000000000128 /* RecentSavedRecipesSection.swift */,
+				A00001070000000000000107 /* RecognitionFeedbackCard.swift */,
+				A00001080000000000000108 /* PendingSaveCard.swift */,
+				A00001180000000000000118 /* ScanRecipeTitleSection.swift */,
+				A00001190000000000000119 /* LiveTitleScannerView.swift */,
+				A00001260000000000000126 /* TitleScanStatusCard.swift */,
+			);
 			path = Recognition;
+			sourceTree = "<group>";
+		};
+		A00000560000000000000056 /* RecipeRemembererUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A00001340000000000000134 /* RecipeRemembererUITests.swift */,
+			);
+			path = RecipeRemembererUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,6 +252,24 @@
 			productReference = A00000030000000000000003 /* RecipeRememberer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A00000570000000000000057 /* RecipeRemembererUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000630000000000000063 /* Build configuration list for PBXNativeTarget "RecipeRemembererUITests" */;
+			buildPhases = (
+				A00000590000000000000059 /* Sources */,
+				A00000550000000000000055 /* Frameworks */,
+				A00000580000000000000058 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000600000000000000060 /* PBXTargetDependency */,
+			);
+			name = RecipeRemembererUITests;
+			productName = RecipeRemembererUITests;
+			productReference = A00001330000000000000133 /* RecipeRemembererUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -219,6 +282,10 @@
 				TargetAttributes = {
 					A000000E000000000000000E = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					A00000570000000000000057 = {
+						CreatedOnToolsVersion = 17.0;
+						TestTargetID = A000000E000000000000000E;
 					};
 				};
 			};
@@ -236,6 +303,7 @@
 			projectRoot = "";
 			targets = (
 				A000000E000000000000000E /* RecipeRememberer */,
+				A00000570000000000000057 /* RecipeRemembererUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -247,6 +315,13 @@
 			files = (
 				A000002C000000000000002C /* LaunchScreen.storyboard in Resources */,
 				A000002B000000000000002B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000580000000000000058 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +343,8 @@
 				A00000180000000000000018 /* PendingSaveCard.swift in Sources */,
 				A00000490000000000000049 /* EditRecipeSheet.swift in Sources */,
 				A00000160000000000000016 /* SavedRecipeRow.swift in Sources */,
+				A00000640000000000000064 /* SavedRecipeRowThumbnail.swift in Sources */,
+				A00000510000000000000051 /* SavedRecipePhotoGallerySection.swift in Sources */,
 				A00000420000000000000042 /* RecipeNormalizer.swift in Sources */,
 				A000004E000000000000004E /* RecipePhotoStore.swift in Sources */,
 				A00000470000000000000047 /* LocalLibraryNoticeCard.swift in Sources */,
@@ -283,12 +360,31 @@
 				A00000460000000000000046 /* TitleScanStatusCard.swift in Sources */,
 				A00000410000000000000041 /* RecipeMatcher.swift in Sources */,
 				A00000440000000000000044 /* SavedRecipeSnapshot.swift in Sources */,
+				A00000650000000000000065 /* RecipePhotoCropGeometry.swift in Sources */,
+				A00000660000000000000066 /* SavedRecipePhotoActionLayout.swift in Sources */,
 				A00000100000000000000010 /* RecipeRemembererApp.swift in Sources */,
 				A00000400000000000000040 /* RecipeCatalogEntry.swift in Sources */,
+				A00000520000000000000052 /* UITestLaunchConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000590000000000000059 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000530000000000000053 /* RecipeRemembererUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000600000000000000060 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A000000E000000000000000E /* RecipeRememberer */;
+			targetProxy = A00000540000000000000054 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A00000250000000000000025 /* Debug */ = {
@@ -343,6 +439,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -351,7 +448,6 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -401,6 +497,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -408,16 +505,15 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				VALIDATE_PRODUCT = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
 		A00000310000000000000031 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RecipeRememberer/Info.plist;
@@ -438,9 +534,9 @@
 		A00000320000000000000032 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RecipeRememberer/Info.plist;
@@ -455,6 +551,44 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A00000610000000000000061 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reciperememberer.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RecipeRememberer;
+			};
+			name = Debug;
+		};
+		A00000620000000000000062 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.reciperememberer.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RecipeRememberer;
 			};
 			name = Release;
 		};
@@ -475,6 +609,15 @@
 			buildConfigurations = (
 				A00000310000000000000031 /* Debug */,
 				A00000320000000000000032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000630000000000000063 /* Build configuration list for PBXNativeTarget "RecipeRemembererUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000610000000000000061 /* Debug */,
+				A00000620000000000000062 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -15,6 +15,28 @@ public enum RecipeNormalizer {
         normalizedKey(for: value)
             .split(separator: " ")
             .map(String.init)
-            .filter { $0.count > 1 }
+            .filter { token in
+                token.count > 1 && !stopWords.contains(token)
+            }
     }
+
+    private static let stopWords: Set<String> = [
+        "and",
+        "das",
+        "der",
+        "die",
+        "for",
+        "fur",
+        "hello",
+        "fresh",
+        "im",
+        "in",
+        "mit",
+        "of",
+        "ohne",
+        "the",
+        "und",
+        "von",
+        "with",
+    ]
 }
