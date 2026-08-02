@@ -255,24 +255,6 @@
 			productReference = A00000030000000000000003 /* RecipeRememberer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A000006A000000000000006A /* RecipeRemembererTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A00000720000000000000072 /* Build configuration list for PBXNativeTarget "RecipeRemembererTests" */;
-			buildPhases = (
-				A000006F000000000000006F /* Sources */,
-				A00000680000000000000068 /* Frameworks */,
-				A000006E000000000000006E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A000006D000000000000006D /* PBXTargetDependency */,
-			);
-			name = RecipeRemembererTests;
-			productName = RecipeRemembererTests;
-			productReference = A00001380000000000000138 /* RecipeRemembererTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		A00000570000000000000057 /* RecipeRemembererUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A00000630000000000000063 /* Build configuration list for PBXNativeTarget "RecipeRemembererUITests" */;
@@ -291,6 +273,24 @@
 			productReference = A00001330000000000000133 /* RecipeRemembererUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A000006A000000000000006A /* RecipeRemembererTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000720000000000000072 /* Build configuration list for PBXNativeTarget "RecipeRemembererTests" */;
+			buildPhases = (
+				A000006F000000000000006F /* Sources */,
+				A00000680000000000000068 /* Frameworks */,
+				A000006E000000000000006E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A000006D000000000000006D /* PBXTargetDependency */,
+			);
+			name = RecipeRemembererTests;
+			productName = RecipeRemembererTests;
+			productReference = A00001380000000000000138 /* RecipeRemembererTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -304,12 +304,12 @@
 					A000000E000000000000000E = {
 						CreatedOnToolsVersion = 26.2;
 					};
-					A000006A000000000000006A = {
-						CreatedOnToolsVersion = 26.3;
-						TestTargetID = A000000E000000000000000E;
-					};
 					A00000570000000000000057 = {
 						CreatedOnToolsVersion = 17.0;
+						TestTargetID = A000000E000000000000000E;
+					};
+					A000006A000000000000006A = {
+						CreatedOnToolsVersion = 26.3;
 						TestTargetID = A000000E000000000000000E;
 					};
 				};
@@ -412,15 +412,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A000006D000000000000006D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A000000E000000000000000E /* RecipeRememberer */;
-			targetProxy = A000006C000000000000006C /* PBXContainerItemProxy */;
-		};
 		A00000600000000000000060 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A000000E000000000000000E /* RecipeRememberer */;
 			targetProxy = A00000540000000000000054 /* PBXContainerItemProxy */;
+		};
+		A000006D000000000000006D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A000000E000000000000000E /* RecipeRememberer */;
+			targetProxy = A000006C000000000000006C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -551,7 +551,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = NAPDF773HN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RecipeRememberer/Info.plist;
@@ -574,7 +575,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = RecipeAppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = NAPDF773HN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = RecipeRememberer/Info.plist;
@@ -597,7 +599,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -616,7 +618,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -636,7 +638,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -657,7 +659,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
