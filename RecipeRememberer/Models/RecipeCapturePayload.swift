@@ -3,7 +3,6 @@ import Foundation
 struct RecipeCapturePayload: Equatable, Sendable {
     let title: String
     let subtitle: String
-    let hellofreshCode: String?
     let sourceDescription: String
     let frontImageData: Data
     let backImageData: Data

@@ -10,26 +10,24 @@ Scan recipe cards into a library
 
 ## Promotional Text
 
-Point your iPhone or iPad at a printed recipe title, catch duplicates, and build a local recipe library in seconds.
+Capture printed recipe cards, catch duplicates, and keep a clean personal recipe library on your iPhone or iPad.
 
 ## Description
 
-Recipe Rememberer helps you organize printed recipe cards by scanning recipe titles, checking for duplicates, and saving new recipes into a simple local library.
+Recipe Rememberer helps you organize printed recipe cards by photographing both sides of each card, reading the title on-device, checking for likely duplicates, and saving new recipes into a simple local library.
 
 Features:
 
-- Live recipe title scanning on supported iPhone and iPad devices
-- Manual title entry when scanning is unavailable
-- Duplicate detection using recipe title, subtitle, and optional HelloFresh code
+- Front-and-back recipe card capture
+- On-device OCR and recipe title detection
+- Duplicate detection using fuzzy text comparison
+- `Ask First` and `Auto Save` save modes
 - Local-only storage with SwiftData
-- Rename and delete controls for library cleanup
-- Recently saved recipe feedback after each scan
-
-Recipe Rememberer is an independent tool and is not affiliated with HelloFresh.
+- Preview, share, rename, and delete controls for saved recipes
 
 ## Keywords
 
-recipe, recipes, scanner, OCR, kitchen, cooking, meal planner, HelloFresh
+recipe, recipes, scanner, card scanner, OCR, kitchen, cooking, organizer, library
 
 ## Support URL
 
@@ -41,12 +39,13 @@ Set this to the published URL for `PRIVACY.md` or your hosted privacy policy bef
 
 ## App Review Notes
 
-- The scanner uses `VisionKit` live text capture to detect printed recipe titles.
-- The app stores recipe data locally on-device.
-- No account or cloud service is required.
+- The scanner captures front and back photos of printed recipe cards.
+- OCR is performed on-device to detect recipe text.
+- Recipe data and saved photos stay local on-device.
+- No account, tracking, or third-party SDK is required.
 
 ## Privacy Answers Draft
 
 - Data collection: No
 - Tracking: No
-- Camera usage: Yes, for live text scanning only
+- Camera usage: Yes, for recipe card capture and text recognition

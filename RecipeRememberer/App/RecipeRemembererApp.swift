@@ -24,6 +24,9 @@ struct RecipeRemembererApp: App {
             RootView()
                 .environment(appModel)
                 .task {
+                    if UITestLaunchConfiguration.shouldUseAutomaticSaveMode {
+                        appModel.saveMode = .automatic
+                    }
                     UITestRecipeSeeder.seedLibraryIfNeeded(in: modelContainer)
                 }
         }

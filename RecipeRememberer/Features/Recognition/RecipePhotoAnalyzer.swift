@@ -4,7 +4,6 @@ import Vision
 struct RecipePhotoAnalysis: Equatable, Sendable {
     let title: String
     let subtitle: String
-    let hellofreshCode: String?
     let frontRecognizedText: String
     let backRecognizedText: String
     let analysisSummary: String
@@ -33,12 +32,6 @@ enum RecipePhotoAnalyzer {
         let subtitle = parsedFrontRecipe?.subtitle
             ?? fallbackSubtitle(from: front.lines, title: title)
             ?? ""
-        let hellofreshCode = parsedFrontRecipe?.hellofreshCode
-            ?? firstMatch(
-                in: "\(front.fullText)\n\(back.fullText)",
-                for: #/\bHF(?:[- ]?[A-Z]{2,3})?[- ]?\d{1,4}\b/#
-            )?
-            .replacing(" ", with: "-")
 
         let normalizedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !normalizedTitle.isEmpty else {
@@ -48,13 +41,11 @@ enum RecipePhotoAnalyzer {
         return RecipePhotoAnalysis(
             title: normalizedTitle,
             subtitle: subtitle.trimmingCharacters(in: .whitespacesAndNewlines),
-            hellofreshCode: hellofreshCode,
             frontRecognizedText: front.fullText,
             backRecognizedText: back.fullText,
             analysisSummary: analysisSummary(
                 title: normalizedTitle,
                 subtitle: subtitle,
-                hellofreshCode: hellofreshCode,
                 frontText: front.fullText,
                 backText: back.fullText,
                 frontLineCount: front.lines.count,
@@ -182,7 +173,6 @@ enum RecipePhotoAnalyzer {
     private static func analysisSummary(
         title: String,
         subtitle: String,
-        hellofreshCode: String?,
         frontText: String,
         backText: String,
         frontLineCount: Int,
@@ -193,10 +183,6 @@ enum RecipePhotoAnalyzer {
         let trimmedSubtitle = subtitle.trimmingCharacters(in: .whitespacesAndNewlines)
         if !trimmedSubtitle.isEmpty {
             summaryParts.append("Subtitle: \(trimmedSubtitle).")
-        }
-
-        if let hellofreshCode {
-            summaryParts.append("HelloFresh code: \(hellofreshCode).")
         }
 
         if let cookingTime = firstMatch(
@@ -245,7 +231,6 @@ enum RecipePhotoAnalyzer {
         }
 
         let blockedTerms = [
-            "hellofresh",
             "kcal",
             "min",
             "minutes",

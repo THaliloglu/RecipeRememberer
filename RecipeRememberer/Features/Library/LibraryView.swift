@@ -22,7 +22,7 @@ struct LibraryView: View {
                         ContentUnavailableView(
                             "No Saved Recipes",
                             systemImage: "square.stack.3d.down.forward",
-                            description: Text("Scan a HelloFresh recipe title in the scanner to start building your local library.")
+                            description: Text("Scan a printed recipe card to start building your local library.")
                         )
                     } else {
                         ContentUnavailableView.search
@@ -119,7 +119,6 @@ struct LibraryView: View {
         return savedRecipes.filter { recipe in
             recipe.title.localizedStandardContains(appModel.librarySearchText)
                 || recipe.subtitle.localizedStandardContains(appModel.librarySearchText)
-                || (recipe.hellofreshCode ?? "").localizedStandardContains(appModel.librarySearchText)
         }
     }
 

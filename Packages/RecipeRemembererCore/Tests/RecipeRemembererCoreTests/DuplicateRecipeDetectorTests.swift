@@ -2,19 +2,19 @@ import Testing
 @testable import RecipeRemembererCore
 
 @Test
-func duplicateDetectorMatchesOnRecipeCode() {
+func duplicateDetectorMatchesOnNormalizedTitle() {
     let savedRecipes = [
         SavedRecipeSnapshot(
-            title: "One-Pot Mushroom Rigatoni",
-            subtitle: "with parmesan and spinach",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "One-Pot Mushroom Rigatoni"),
-            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with parmesan and spinach"),
-            hellofreshCode: "HF-3017"
+            title: "Chicken and Thyme Grain Bowl",
+            subtitle: "",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Chicken and Thyme Grain Bowl"),
+            normalizedSubtitle: ""
         ),
     ]
 
     let isDuplicate = DuplicateRecipeDetector.isDuplicate(
-        candidate: SampleRecipeCatalog.entries[0],
+        title: "Chicken & Thyme Grain Bowl",
+        subtitle: "",
         among: savedRecipes
     )
 
@@ -22,21 +22,19 @@ func duplicateDetectorMatchesOnRecipeCode() {
 }
 
 @Test
-func duplicateDetectorMatchesOnNormalizedTitle() {
+func duplicateDetectorMatchesOnTitleAndSubtitleTogether() {
     let savedRecipes = [
         SavedRecipeSnapshot(
-            title: "Chicken and Thyme Grain Bowl",
-            subtitle: "",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Chicken and Thyme Grain Bowl"),
-            normalizedSubtitle: "",
-            hellofreshCode: nil
+            title: "Creamy Dill Chicken",
+            subtitle: "with roasted potatoes and green beans",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Creamy Dill Chicken"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with roasted potatoes and green beans")
         ),
     ]
 
     let isDuplicate = DuplicateRecipeDetector.isDuplicate(
-        title: "Chicken & Thyme Grain Bowl",
-        subtitle: "",
-        hellofreshCode: nil,
+        title: "Creamy Dill Chicken",
+        subtitle: "Roasted Potatoes and Green Beans",
         among: savedRecipes
     )
 
@@ -47,127 +45,94 @@ func duplicateDetectorMatchesOnNormalizedTitle() {
 func duplicateDetectorFindsSavedRecipeFromOCRTitleTokens() {
     let savedRecipes = [
         SavedRecipeSnapshot(
-            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
-            subtitle: "Kartoffeln und Porree",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
-            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
-            hellofreshCode: nil,
+            title: "Italian Beef Bake",
+            subtitle: "with potatoes and leeks",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italian Beef Bake"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with potatoes and leeks"),
             frontRecognizedText: """
-            HELLO FRESH
-            Italienisches Gratin mit Bio-Rinderhackfleisch
-            Kartoffeln und Porree
+            Italian Beef Bake
+            with potatoes and leeks
             35 - 45 Min 613 kcal
             """,
             backRecognizedText: """
-            1 Kartoffel
-            1 Porree
-            1 Zwiebel
+            potatoes
+            leeks
+            onion
             """
         ),
     ]
 
     let match = DuplicateRecipeDetector.bestTitleMatch(
         for: """
-        HELLO FRESH
-        Italienisches Gratin mit Bio Rinderhackfleisch
-        Kartoffeln und Porree
+        Italian Beef Bake
+        potatoes and leeks
         """,
         among: savedRecipes
     )
 
-    #expect(match?.title == "Italienisches Gratin mit Bio-Rinderhackfleisch")
+    #expect(match?.title == "Italian Beef Bake")
 }
 
 @Test
 func duplicateDetectorAllowsNearMatchInsteadOfExactEquality() {
     let savedRecipes = [
         SavedRecipeSnapshot(
-            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
-            subtitle: "Kartoffeln und Porree",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
-            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
-            hellofreshCode: nil,
+            title: "Orange Chicken Traybake",
+            subtitle: "with broccoli and roast potatoes",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Orange Chicken Traybake"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with broccoli and roast potatoes"),
             frontRecognizedText: """
-            HELLO FRESH
-            Italienisches Gratin mit Bio-Rinderhackfleisch
-            Kartoffeln und Porree
-            Viel Gemüse High Protein
+            Orange Chicken Traybake
+            with broccoli and roast potatoes
+            High Protein
             """,
             backRecognizedText: """
-            Ofenkartoffel
-            Porree
-            Knoblauchzehe
+            broccoli
+            potatoes
+            orange sauce
             """
         ),
     ]
 
     let match = DuplicateRecipeDetector.bestTitleMatch(
         for: """
-        Italienisches Gratin mit Rinderhackfleisch
-        Kartoffeln & Porree
-        Hallo Fresh
+        Orange Chicken Bake
+        broccoli and roast potatoes
         """,
         among: savedRecipes
     )
 
-    #expect(match?.title == "Italienisches Gratin mit Bio-Rinderhackfleisch")
+    #expect(match?.title == "Orange Chicken Traybake")
 }
 
 @Test
 func duplicateDetectorDoesNotCollapseDistinctRecipeTitlesIntoSavedRecipe() {
     let savedRecipes = [
         SavedRecipeSnapshot(
-            title: "Italienisches Gratin mit Bio-Rinderhackfleisch",
-            subtitle: "Kartoffeln und Porree",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Italienisches Gratin mit Bio-Rinderhackfleisch"),
-            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "Kartoffeln und Porree"),
-            hellofreshCode: "HF-DE-21",
+            title: "Orange Chicken Traybake",
+            subtitle: "with broccoli and roast potatoes",
+            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Orange Chicken Traybake"),
+            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with broccoli and roast potatoes"),
             frontRecognizedText: """
-            HELLO FRESH
-            Italienisches Gratin mit Bio-Rinderhackfleisch
-            Kartoffeln und Porree
-            Viel Gemüse High Protein Kalorien im Blick 35 - 45 Min 613 kcal
+            Orange Chicken Traybake
+            with broccoli and roast potatoes
+            25 - 35 Min
             """,
             backRecognizedText: """
-            Ofenkartoffel
-            Zwiebel
-            Knoblauchzehe
-            Porree
+            broccoli
+            orange sauce
+            potatoes
             """
         ),
     ]
 
     let match = DuplicateRecipeDetector.bestTitleMatch(
         for: """
-        HELLO FRESH
-        Hähnchenfilets in sticky Orangen-Zwiebelsoße
-        mit Brokkoli und Rosmarin-Kartoffelspalten
-        Viel Gemüse High Protein Schnell 25 - 35 Min 688 kcal
+        Creamy Mushroom Pasta
+        with spinach and garlic crumbs
         """,
         among: savedRecipes
     )
 
     #expect(match == nil)
-}
-
-@Test
-func duplicateDetectorMatchesOnTitleAndSubtitleTokens() {
-    let savedRecipes = [
-        SavedRecipeSnapshot(
-            title: "Creamy Dill Chicken",
-            subtitle: "with roasted potatoes and green beans",
-            normalizedTitle: RecipeNormalizer.normalizedKey(for: "Creamy Dill Chicken"),
-            normalizedSubtitle: RecipeNormalizer.normalizedKey(for: "with roasted potatoes and green beans"),
-            hellofreshCode: nil
-        ),
-    ]
-
-    let isDuplicate = DuplicateRecipeDetector.isDuplicate(
-        title: "Creamy Dill Chicken",
-        subtitle: "Roasted Potatoes and Green Beans",
-        hellofreshCode: nil,
-        among: savedRecipes
-    )
-
-    #expect(isDuplicate)
 }

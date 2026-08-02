@@ -10,8 +10,8 @@ Recipe Rememberer is currently a small independent project.
 
 ## Known Limitations
 
-- Live title scanning requires a supported iPhone or iPad camera.
-- Simulator is useful for UI testing, but manual title entry is the main fallback there.
+- Camera capture requires a supported iPhone or iPad camera.
+- Simulator is useful for UI testing, but camera capture is mocked there.
 - Recipes are stored locally on-device. The app does not currently sync across devices.
 
 ## Contact

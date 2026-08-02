@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ScanRecipeTitleSection: View {
     @Environment(AppModel.self) private var appModel
-    @Environment(\.modelContext) private var modelContext
     @State private var isLiveScannerPresented = false
 
     var body: some View {
@@ -15,7 +14,7 @@ struct ScanRecipeTitleSection: View {
                         .font(.headline)
                         .bold()
 
-                    Text("Scan a card or type a title.")
+                    Text("Scan a printed recipe card.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -58,24 +57,6 @@ struct ScanRecipeTitleSection: View {
             .buttonStyle(.borderedProminent)
             .accessibilityIdentifier("scanner.open")
             .accessibilityHint("Opens the camera to capture the front and back of a printed recipe card.")
-
-            HStack(spacing: 12) {
-                TextField("Recipe title", text: $appModel.titleScanInput)
-                    .textFieldStyle(.roundedBorder)
-                    .textInputAutocapitalization(.words)
-                    .submitLabel(.done)
-                    .onSubmit {
-                        appModel.scanRecipeTitle(using: modelContext)
-                    }
-
-                Button("Check", systemImage: "text.viewfinder", action: checkTypedTitle)
-                .buttonStyle(.bordered)
-                .accessibilityHint("Compares the typed recipe title with your saved recipes.")
-            }
-
-            Text("The large recipe title on the front card is the main comparison signal.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
         }
         .padding(AppStyle.cardPadding)
         .background(.quaternary.opacity(0.35), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
@@ -86,9 +67,5 @@ struct ScanRecipeTitleSection: View {
 
     private func openScanner() {
         isLiveScannerPresented = true
-    }
-
-    private func checkTypedTitle() {
-        appModel.scanRecipeTitle(using: modelContext)
     }
 }

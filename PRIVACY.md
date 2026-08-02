@@ -4,8 +4,8 @@ Recipe Rememberer stores recipe data locally on the device.
 
 ## What the app uses
 
-- Camera access, only for live title scanning.
-- On-device storage, only for saved recipe titles, optional subtitles, optional HelloFresh codes, save timestamps, and source notes.
+- Camera access, only for recipe card capture.
+- On-device storage, only for saved recipe titles, optional subtitles, save timestamps, source notes, recognized text, and saved recipe card photos.
 
 ## What the app does not do today
 

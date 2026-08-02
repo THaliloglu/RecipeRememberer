@@ -19,7 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Recipe Rememberer uses the camera to scan printed HelloFresh recipe titles and compare them with your saved recipes.</string>
+	<string>Recipe Rememberer uses the camera to scan printed recipe cards, compare them with your saved recipes, and store new cards locally on your device.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationPreferredDefaultSceneSessionRole</key>

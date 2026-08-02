@@ -33,6 +33,17 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A000006A000000000000006A"
+               BuildableName = "RecipeRemembererTests.xctest"
+               BlueprintName = "RecipeRemembererTests"
+               ReferencedContainer = "container:RecipeRememberer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "A00000570000000000000057"
                BuildableName = "RecipeRemembererUITests.xctest"
                BlueprintName = "RecipeRemembererUITests"

@@ -7,11 +7,6 @@ struct ScannerDashboardView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppStyle.sectionSpacing) {
                 ScanRecipeTitleSection()
-
-                if let feedback = appModel.latestFeedback {
-                    RecognitionFeedbackCard(feedback: feedback)
-                }
-
                 PendingSaveCard()
             }
             .padding(.horizontal)

@@ -5,7 +5,6 @@ import SwiftData
 final class StoredRecipe {
     var title: String = ""
     var subtitle: String = ""
-    var hellofreshCode: String?
     var normalizedTitle: String = ""
     var normalizedSubtitle: String = ""
     var sourceDescription: String = ""
@@ -20,7 +19,6 @@ final class StoredRecipe {
     init(
         title: String,
         subtitle: String,
-        hellofreshCode: String?,
         sourceDescription: String,
         frontPhotoFilename: String? = nil,
         backPhotoFilename: String? = nil,
@@ -30,7 +28,6 @@ final class StoredRecipe {
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.hellofreshCode = hellofreshCode
         self.sourceDescription = sourceDescription
         self.frontPhotoFilename = frontPhotoFilename
         self.backPhotoFilename = backPhotoFilename
@@ -42,12 +39,10 @@ final class StoredRecipe {
 
     func updateDetails(
         title: String,
-        subtitle: String,
-        hellofreshCode: String?
+        subtitle: String
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.hellofreshCode = hellofreshCode
         updatedAt = .now
         refreshNormalizedFields()
     }
@@ -58,7 +53,6 @@ final class StoredRecipe {
             subtitle: subtitle,
             normalizedTitle: normalizedTitle,
             normalizedSubtitle: normalizedSubtitle,
-            hellofreshCode: hellofreshCode,
             frontRecognizedText: frontRecognizedText,
             backRecognizedText: backRecognizedText
         )

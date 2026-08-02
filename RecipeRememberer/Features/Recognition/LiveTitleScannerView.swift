@@ -128,6 +128,7 @@ struct LiveTitleScannerView: View {
                     analysisMessage: analysisMessage,
                     isAnalyzing: isAnalyzing,
                     analysisResult: analysisResult,
+                    saveMode: appModel.saveMode,
                     frontImageData: frontImageData,
                     frontOrientation: frontOrientation,
                     backImageData: backImageData,
@@ -160,7 +161,7 @@ struct LiveTitleScannerView: View {
             return min(max(availableHeight * 0.48, 340), 460)
         }
 
-        return min(max(availableHeight * 0.28, 228), 300)
+        return min(max(availableHeight * 0.34, 280), 360)
     }
 
     @ViewBuilder
@@ -248,10 +249,15 @@ struct LiveTitleScannerView: View {
         switch captureStep {
         case .front:
             frontImageData = photoData
-            backImageData = nil
             analysisResult = nil
-            captureStep = .back
-            analysisMessage = "Front photo captured. Flip the card and capture the back."
+
+            if backImageData != nil {
+                analysisMessage = "Front photo recaptured. Analyzing both sides now."
+                analyzeCapturedPhotos()
+            } else {
+                captureStep = .back
+                analysisMessage = "Front photo captured. Flip the card and capture the back."
+            }
         case .back:
             backImageData = photoData
             analysisMessage = "Back photo captured. Analyzing both sides now."
@@ -270,7 +276,7 @@ struct LiveTitleScannerView: View {
 
         if UITestLaunchConfiguration.shouldUseMockScannerCapture {
             analysisResult = UITestRecipeSeeder.mockScannerAnalysisResult
-            analysisMessage = "The card was analyzed. Review the detected recipe before saving it."
+            analysisMessage = postAnalysisMessage
             isAnalyzing = false
             return
         }
@@ -286,7 +292,7 @@ struct LiveTitleScannerView: View {
                 }
 
                 self.analysisResult = analysisResult
-                analysisMessage = "The card was analyzed. Review the detected recipe before saving it."
+                analysisMessage = postAnalysisMessage
                 isAnalyzing = false
             } catch {
                 guard !Task.isCancelled else {
@@ -313,7 +319,6 @@ struct LiveTitleScannerView: View {
         let payload = RecipeCapturePayload(
             title: analysisResult.title,
             subtitle: analysisResult.subtitle,
-            hellofreshCode: analysisResult.hellofreshCode,
             sourceDescription: "two-photo scanner",
             frontImageData: frontImageData,
             backImageData: backImageData,
@@ -330,7 +335,6 @@ struct LiveTitleScannerView: View {
         analysisTask?.cancel()
         captureStep = .front
         frontImageData = nil
-        backImageData = nil
         analysisResult = nil
         isAnalyzing = false
         analysisMessage = "Capture the front of the recipe card again."
@@ -380,6 +384,15 @@ struct LiveTitleScannerView: View {
             frontOrientation = orientation
         case .back:
             backOrientation = orientation
+        }
+    }
+
+    private var postAnalysisMessage: String {
+        switch appModel.saveMode {
+        case .confirmFirst:
+            return "The card was analyzed. Review the detected recipe before saving it."
+        case .automatic:
+            return "The card was analyzed. Auto Save is on, so this scan can be saved to your library now."
         }
     }
 }
@@ -626,6 +639,7 @@ private struct ScannerBottomPanel: View {
     let analysisMessage: String?
     let isAnalyzing: Bool
     let analysisResult: RecipePhotoAnalysis?
+    let saveMode: AppModel.SaveMode
     let frontImageData: Data?
     let frontOrientation: CaptureCardOrientation
     let backImageData: Data?
@@ -639,6 +653,24 @@ private struct ScannerBottomPanel: View {
     let onCommit: () -> Void
     let onRetakeFront: () -> Void
     let onRetakeBack: () -> Void
+
+    private var commitButtonTitle: String {
+        switch saveMode {
+        case .confirmFirst:
+            return "Continue to Save Review"
+        case .automatic:
+            return "Save to Library"
+        }
+    }
+
+    private var commitButtonMessage: String {
+        switch saveMode {
+        case .confirmFirst:
+            return "Use this scan and review the detected recipe details."
+        case .automatic:
+            return "Auto Save is on. This scan will be saved directly to your local recipe library."
+        }
+    }
 
     var body: some View {
         ScrollView {
@@ -668,10 +700,10 @@ private struct ScannerBottomPanel: View {
 
                     Button(action: onCommit) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Label("Continue to Save Review", systemImage: "square.and.arrow.down.on.square")
+                            Label(commitButtonTitle, systemImage: "square.and.arrow.down.on.square")
                                 .font(.headline)
 
-                            Text("Use this scan and review the detected recipe details.")
+                            Text(commitButtonMessage)
                                 .font(.footnote)
                                 .foregroundStyle(.white.opacity(0.84))
                         }
@@ -693,40 +725,109 @@ private struct ScannerBottomPanel: View {
                             .frame(maxWidth: .infinity)
                     }
                 } else {
-                    Text(currentOrientation.instruction(for: captureStep))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-
-                    Text("Tap the camera preview to focus before capturing the card.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-
-                    Button(captureStep.buttonTitle, systemImage: "camera", action: onCapture)
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityIdentifier("scanner.captureButton")
-
-                    if frontImageData != nil {
-                        Button("Start Over", systemImage: "arrow.counterclockwise", action: onStartOver)
-                            .buttonStyle(.bordered)
-                    }
-
-                    CaptureOrientationPicker(
-                        selection: currentOrientation,
-                        step: captureStep,
-                        onSelect: onOrientationChange
+                    CaptureActionCard(
+                        captureStep: captureStep,
+                        currentOrientation: currentOrientation,
+                        canStartOver: frontImageData != nil,
+                        onCapture: onCapture,
+                        onStartOver: onStartOver
                     )
 
-                    CameraZoomControl(zoomFactor: $zoomFactor)
+                    CaptureAdjustmentsCard(
+                        selection: currentOrientation,
+                        step: captureStep,
+                        zoomFactor: $zoomFactor,
+                        onSelect: onOrientationChange
+                    )
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 18)
             .padding(AppStyle.cardPadding)
         }
         .frame(maxWidth: .infinity)
-        .scrollIndicators(.hidden)
         .background(.ultraThinMaterial, in: .rect(cornerRadius: 28))
+        .overlay(alignment: .top) {
+            Capsule()
+                .fill(.secondary.opacity(0.5))
+                .frame(width: 40, height: 5)
+                .padding(.top, 10)
+                .allowsHitTesting(false)
+        }
+    }
+}
+
+private struct CaptureActionCard: View {
+    let captureStep: CaptureStep
+    let currentOrientation: CaptureCardOrientation
+    let canStartOver: Bool
+    let onCapture: () -> Void
+    let onStartOver: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label {
+                Text(captureStep == .front ? "Front Photo" : "Back Photo")
+            } icon: {
+                Image(systemName: currentOrientation.systemImage)
+            }
+            .font(.headline)
+
+            Text(currentOrientation.instruction(for: captureStep))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Text("Tap the preview to focus, then capture the card.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            Button(captureStep.buttonTitle, systemImage: "camera", action: onCapture)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityIdentifier("scanner.captureButton")
+
+            if canStartOver {
+                Button("Start Over", systemImage: "arrow.counterclockwise", action: onStartOver)
+                    .buttonStyle(.bordered)
+            }
+
+            Divider()
+
+            Label("More framing controls below", systemImage: "arrow.down")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .padding(AppStyle.cardPadding)
+        .background(.quaternary.opacity(0.22), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
+    }
+}
+
+private struct CaptureAdjustmentsCard: View {
+    let selection: CaptureCardOrientation
+    let step: CaptureStep
+    @Binding var zoomFactor: Double
+    let onSelect: (CaptureCardOrientation) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Framing Controls", systemImage: "slider.horizontal.3")
+                .font(.headline)
+
+            Text("Adjust orientation and zoom before taking the \(step == .front ? "front" : "back") photo.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            CaptureOrientationPicker(
+                selection: selection,
+                step: step,
+                onSelect: onSelect
+            )
+
+            CameraZoomControl(zoomFactor: $zoomFactor)
+        }
+        .padding(AppStyle.cardPadding)
+        .background(.quaternary.opacity(0.18), in: .rect(cornerRadius: AppStyle.cardCornerRadius))
     }
 }
 
@@ -754,10 +855,6 @@ private struct CaptureOrientationPicker: View {
             }
             .pickerStyle(.segmented)
             .accessibilityIdentifier("scanner.orientationPicker")
-
-            Text("Choose how you want to hold the \(step == .front ? "front" : "back") of the recipe card.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
         }
     }
 }
@@ -780,10 +877,6 @@ private struct CameraZoomControl: View {
 
             Slider(value: $zoomFactor, in: 1...4, step: 0.25)
                 .accessibilityIdentifier("scanner.zoomSlider")
-
-            Text("Move the slider to zoom closer before taking the card photo.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
         }
     }
 }
@@ -856,12 +949,6 @@ private struct RecipePhotoAnalysisCard: View {
 
                 if !analysisResult.subtitle.isEmpty {
                     Text(analysisResult.subtitle)
-                        .foregroundStyle(.secondary)
-                }
-
-                if let hellofreshCode = analysisResult.hellofreshCode {
-                    Label(hellofreshCode, systemImage: "number.square")
-                        .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }

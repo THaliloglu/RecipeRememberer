@@ -8,6 +8,7 @@ enum UITestLaunchConfiguration {
     static let shouldAutoOpenRecipe = ProcessInfo.processInfo.arguments.contains("-uiTestAutoOpenRecipe")
     static let shouldUseMockScanner = ProcessInfo.processInfo.arguments.contains("-uiTestMockScanner")
     static let shouldUseMockScannerCapture = ProcessInfo.processInfo.arguments.contains("-uiTestMockScannerCapture")
+    static let shouldUseAutomaticSaveMode = ProcessInfo.processInfo.arguments.contains("-uiTestAutomaticSaveMode")
 }
 
 @MainActor
@@ -28,7 +29,6 @@ enum UITestRecipeSeeder {
         let payload = RecipeCapturePayload(
             title: "UI Test Recipe",
             subtitle: "Front and back photo preview",
-            hellofreshCode: "HF-UI-1",
             sourceDescription: "ui test seed",
             frontImageData: samplePhotoData(
                 title: "Front Photo",
@@ -55,7 +55,6 @@ enum UITestRecipeSeeder {
         let recipe = StoredRecipe(
             title: payload.title,
             subtitle: payload.subtitle,
-            hellofreshCode: payload.hellofreshCode,
             sourceDescription: payload.sourceDescription,
             frontPhotoFilename: storedPhotos.frontPhotoFilename,
             backPhotoFilename: storedPhotos.backPhotoFilename,
@@ -72,7 +71,6 @@ enum UITestRecipeSeeder {
         RecipePhotoAnalysis(
             title: "Mock Scanner Recipe",
             subtitle: "Saved photo parity test",
-            hellofreshCode: "HF-MOCK-1",
             frontRecognizedText: "Mock Scanner Recipe",
             backRecognizedText: "Saved photo parity test",
             analysisSummary: "Mock scanner capture for UI tests."

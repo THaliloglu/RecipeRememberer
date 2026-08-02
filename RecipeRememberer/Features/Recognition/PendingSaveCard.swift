@@ -7,14 +7,13 @@ struct PendingSaveCard: View {
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
-        if let draft = appModel.pendingRecipeDraft {
+        if let draft = appModel.pendingRecipeDraft, draft.capturePayload != nil {
             PendingRecipeDraftEditor(
                 draft: draft,
-                onSave: { title, subtitle, hellofreshCode in
+                onSave: { title, subtitle in
                     appModel.updatePendingDraft(
                         title: title,
-                        subtitle: subtitle,
-                        hellofreshCode: hellofreshCode
+                        subtitle: subtitle
                     )
                     appModel.confirmPendingSave(using: modelContext)
                 },
@@ -29,17 +28,16 @@ private struct PendingRecipeDraftEditor: View {
     @Environment(\.modelContext) private var modelContext
 
     let draft: AppModel.PendingRecipeDraft
-    let onSave: (String, String, String) -> Void
+    let onSave: (String, String) -> Void
     let onDismiss: () -> Void
     
     @State private var title: String
     @State private var subtitle: String
-    @State private var hellofreshCode: String
     @State private var duplicateRecipe: StoredRecipe?
 
     init(
         draft: AppModel.PendingRecipeDraft,
-        onSave: @escaping (String, String, String) -> Void,
+        onSave: @escaping (String, String) -> Void,
         onDismiss: @escaping () -> Void
     ) {
         self.draft = draft
@@ -47,7 +45,6 @@ private struct PendingRecipeDraftEditor: View {
         self.onDismiss = onDismiss
         _title = State(initialValue: draft.title)
         _subtitle = State(initialValue: draft.subtitle)
-        _hellofreshCode = State(initialValue: draft.hellofreshCode ?? "")
     }
 
     var body: some View {
@@ -68,10 +65,6 @@ private struct PendingRecipeDraftEditor: View {
                 .textFieldStyle(.roundedBorder)
                 .textInputAutocapitalization(.words)
 
-            TextField("HelloFresh code (optional)", text: $hellofreshCode)
-            .textFieldStyle(.roundedBorder)
-            .textInputAutocapitalization(.characters)
-
             if let duplicateRecipe {
                 Label(
                     "Already saved as \(duplicateRecipe.title).",
@@ -87,7 +80,7 @@ private struct PendingRecipeDraftEditor: View {
 
             HStack {
                 Button("Save Recipe", systemImage: "square.and.arrow.down") {
-                    onSave(title, subtitle, hellofreshCode)
+                    onSave(title, subtitle)
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(
@@ -110,16 +103,12 @@ private struct PendingRecipeDraftEditor: View {
         .onChange(of: subtitle) { _, _ in
             refreshDuplicateRecipe()
         }
-        .onChange(of: hellofreshCode) { _, _ in
-            refreshDuplicateRecipe()
-        }
     }
 
     private func refreshDuplicateRecipe() {
         duplicateRecipe = appModel.duplicateRecipe(
             title: title,
             subtitle: subtitle,
-            hellofreshCode: hellofreshCode,
             capturePayload: draft.capturePayload,
             using: modelContext
         )

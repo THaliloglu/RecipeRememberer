@@ -10,13 +10,11 @@ struct EditRecipeSheet: View {
 
     @State private var title: String
     @State private var subtitle: String
-    @State private var hellofreshCode: String
 
     init(recipe: StoredRecipe) {
         self.recipe = recipe
         _title = State(initialValue: recipe.title)
         _subtitle = State(initialValue: recipe.subtitle)
-        _hellofreshCode = State(initialValue: recipe.hellofreshCode ?? "")
     }
 
     var body: some View {
@@ -28,9 +26,6 @@ struct EditRecipeSheet: View {
 
                     TextField("Subtitle", text: $subtitle)
                         .textInputAutocapitalization(.words)
-
-                    TextField("HelloFresh code", text: $hellofreshCode)
-                        .textInputAutocapitalization(.characters)
                 }
 
                 if recipe.savedPhotoCount > 0 {
@@ -49,7 +44,6 @@ struct EditRecipeSheet: View {
                                 recipe,
                                 title: title,
                                 subtitle: subtitle,
-                                hellofreshCode: hellofreshCode,
                                 using: modelContext
                             )
 
@@ -71,6 +65,5 @@ struct EditRecipeSheet: View {
     private var hasChanges: Bool {
         title != recipe.title
             || subtitle != recipe.subtitle
-            || hellofreshCode != (recipe.hellofreshCode ?? "")
     }
 }

@@ -1,0 +1,50 @@
+included:
+  - RecipeRememberer
+  - RecipeRemembererUITests
+  - Packages/RecipeRemembererCore/Sources
+  - Packages/RecipeRemembererCore/Tests
+
+excluded:
+  - RecipeRememberer.xcodeproj
+  - build
+  - DerivedData
+  - .build
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - sorted_first_last
+  - toggle_bool
+  - vertical_whitespace_closing_braces
+
+disabled_rules:
+  - trailing_whitespace
+
+line_length:
+  warning: 140
+  error: 180
+  ignores_comments: true
+  ignores_urls: true
+
+type_body_length:
+  warning: 320
+  error: 450
+
+file_length:
+  warning: 500
+  error: 750
+
+function_body_length:
+  warning: 60
+  error: 90
+
+identifier_name:
+  min_length:
+    warning: 2
+  excluded:
+    - id
+    - x
+    - y
+
+reporter: "xcode"

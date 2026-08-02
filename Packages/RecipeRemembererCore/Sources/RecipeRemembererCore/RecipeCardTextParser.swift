@@ -17,16 +17,13 @@ public struct RecipeCardTextLine: Equatable, Sendable {
 public struct RecipeCardScanResult: Equatable, Sendable {
     public let title: String
     public let subtitle: String
-    public let hellofreshCode: String?
 
     public init(
         title: String,
-        subtitle: String,
-        hellofreshCode: String?
+        subtitle: String
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.hellofreshCode = hellofreshCode
     }
 }
 
@@ -66,14 +63,9 @@ public enum RecipeCardTextParser {
             ) ?? ""
         )
 
-        let hellofreshCode = preparedLines.lazy
-            .compactMap(\.recognizedCode)
-            .first
-
         return RecipeCardScanResult(
             title: title,
-            subtitle: subtitle,
-            hellofreshCode: hellofreshCode
+            subtitle: subtitle
         )
     }
 
@@ -208,7 +200,7 @@ public enum RecipeCardTextParser {
             + mixedCaseBonus
             + topBias
             - (line.isMetadata ? 300 : 0)
-            - (line.recognizedCode == nil ? 0 : 80)
+            - (line.recognizedBadgeValue == nil ? 0 : 80)
     }
 
     private static func cleanedDisplayText(_ text: String) -> String {
@@ -238,7 +230,7 @@ private struct PreparedLine {
     let transcript: String
     let frame: CGRect
     let normalizedText: String
-    let recognizedCode: String?
+    let recognizedBadgeValue: String?
     let isMetadata: Bool
 
     init(line: RecipeCardTextLine) {
@@ -248,35 +240,31 @@ private struct PreparedLine {
         self.transcript = transcript
         self.frame = line.frame
         self.normalizedText = normalizedText
-        self.recognizedCode = PreparedLine.extractCode(from: transcript)
+        self.recognizedBadgeValue = PreparedLine.extractBadgeValue(from: transcript)
         self.isMetadata = PreparedLine.isMetadataLine(
             transcript: transcript,
             normalizedText: normalizedText,
-            recognizedCode: recognizedCode
+            recognizedBadgeValue: recognizedBadgeValue
         )
     }
 
-    private static func extractCode(from transcript: String) -> String? {
-        let uppercaseTranscript = transcript.uppercased()
-        let pattern = #/\bHF(?:[- ]?[A-Z]{2,3})?[- ]?\d{1,4}\b/#
+    private static func extractBadgeValue(from transcript: String) -> String? {
+        let trimmedTranscript = transcript.trimmingCharacters(in: .whitespacesAndNewlines)
+        let pattern = #/^\d{1,2}$/#
 
-        guard let match = uppercaseTranscript.firstMatch(of: pattern) else {
+        guard trimmedTranscript.wholeMatch(of: pattern) != nil else {
             return nil
         }
 
-        return String(match.output).replacing(" ", with: "-")
+        return trimmedTranscript
     }
 
     private static func isMetadataLine(
         transcript: String,
         normalizedText: String,
-        recognizedCode: String?
+        recognizedBadgeValue: String?
     ) -> Bool {
-        if recognizedCode != nil {
-            return true
-        }
-
-        if normalizedText == "hello fresh" || normalizedText == "hellofresh" {
+        if recognizedBadgeValue != nil {
             return true
         }
 
@@ -290,8 +278,6 @@ private struct PreparedLine {
 
     private static var metadataTerms: [String] {
         [
-            "hello fresh",
-            "hellofresh",
             "kcal",
             "min",
             "protein",

@@ -32,23 +32,19 @@ struct SavedRecipeRow: View {
                         .lineLimit(2)
                 }
 
-                HStack(spacing: 8) {
-                    if let hellofreshCode = recipe.hellofreshCode, !hellofreshCode.isEmpty {
-                        Text(hellofreshCode)
-                            .lineLimit(1)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(.quaternary, in: .capsule)
-                    }
+                HStack(alignment: .center, spacing: 6) {
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .imageScale(.small)
+                        .accessibilityHidden(true)
 
-                    Label(photoCountLabel, systemImage: "photo.on.rectangle.angled")
+                    Text(photoCountLabel)
                         .lineLimit(1)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(.quaternary, in: .capsule)
                 }
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(.quaternary, in: .capsule)
             }
 
             Image(systemName: "chevron.right")

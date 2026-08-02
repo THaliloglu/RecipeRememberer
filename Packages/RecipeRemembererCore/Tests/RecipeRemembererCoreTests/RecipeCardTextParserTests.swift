@@ -3,63 +3,53 @@ import Testing
 @testable import RecipeRemembererCore
 
 @Test
-func recipeCardTextParserExtractsEnglishCardDetails() {
+func recipeCardTextParserExtractsFrontCardTitleAndSubtitle() {
     let lines = [
         RecipeCardTextLine(
-            transcript: "HELLOFRESH",
+            transcript: "WEEK 21",
             frame: CGRect(x: 20, y: 20, width: 140, height: 22)
         ),
         RecipeCardTextLine(
-            transcript: "One-Pot Mushroom Rigatoni",
+            transcript: "One-Pan Tomato Chicken",
             frame: CGRect(x: 180, y: 22, width: 340, height: 34)
         ),
         RecipeCardTextLine(
-            transcript: "with parmesan and spinach",
+            transcript: "with lemon rice",
             frame: CGRect(x: 182, y: 60, width: 260, height: 24)
-        ),
-        RecipeCardTextLine(
-            transcript: "HF-3017",
-            frame: CGRect(x: 510, y: 22, width: 80, height: 24)
         ),
     ]
 
     let result = RecipeCardTextParser.parse(from: lines)
 
-    #expect(result?.title == "One-Pot Mushroom Rigatoni")
-    #expect(result?.subtitle == "with parmesan and spinach")
-    #expect(result?.hellofreshCode == "HF-3017")
+    #expect(result?.title == "One-Pan Tomato Chicken")
+    #expect(result?.subtitle == "with lemon rice")
 }
 
 @Test
-func recipeCardTextParserExtractsGermanCardDetails() {
+func recipeCardTextParserIgnoresMetadataAndBadgeNumbers() {
     let lines = [
         RecipeCardTextLine(
-            transcript: "HELLO FRESH",
-            frame: CGRect(x: 20, y: 20, width: 150, height: 24)
-        ),
-        RecipeCardTextLine(
-            transcript: "Italienisches Gratin mit Bio-Rinderhackfleisch",
-            frame: CGRect(x: 180, y: 22, width: 600, height: 34)
-        ),
-        RecipeCardTextLine(
-            transcript: "Kartoffeln und Porree",
-            frame: CGRect(x: 180, y: 64, width: 280, height: 24)
-        ),
-        RecipeCardTextLine(
-            transcript: "Viel Gemuse High Protein Kalorien im Blick 35 - 45 Min 613 kcal",
+            transcript: "High Protein 35 - 45 Min 613 kcal",
             frame: CGRect(x: 180, y: 98, width: 600, height: 18)
         ),
         RecipeCardTextLine(
             transcript: "21",
             frame: CGRect(x: 820, y: 16, width: 44, height: 44)
         ),
+        RecipeCardTextLine(
+            transcript: "Italian Beef Bake",
+            frame: CGRect(x: 180, y: 22, width: 600, height: 34)
+        ),
+        RecipeCardTextLine(
+            transcript: "with potatoes and leeks",
+            frame: CGRect(x: 180, y: 64, width: 280, height: 24)
+        ),
     ]
 
     let result = RecipeCardTextParser.parse(from: lines)
 
-    #expect(result?.title == "Italienisches Gratin mit Bio-Rinderhackfleisch")
-    #expect(result?.subtitle == "Kartoffeln und Porree")
-    #expect(result?.hellofreshCode == nil)
+    #expect(result?.title == "Italian Beef Bake")
+    #expect(result?.subtitle == "with potatoes and leeks")
 }
 
 @Test

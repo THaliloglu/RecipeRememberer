@@ -1,54 +1,36 @@
 public enum DuplicateRecipeDetector {
     public static func isDuplicate(
-        candidate: RecipeCatalogEntry,
-        among savedRecipes: [SavedRecipeSnapshot]
-    ) -> Bool {
-        isDuplicate(
-            title: candidate.title,
-            subtitle: candidate.subtitle,
-            hellofreshCode: candidate.hellofreshCode,
-            among: savedRecipes
-        )
-    }
-
-    public static func isDuplicate(
-        title: String,
-        hellofreshCode: String?,
-        among savedRecipes: [SavedRecipeSnapshot]
-    ) -> Bool {
-        isDuplicate(
-            title: title,
-            subtitle: nil,
-            hellofreshCode: hellofreshCode,
-            among: savedRecipes
-        )
-    }
-
-    public static func isDuplicate(
         title: String,
         subtitle: String?,
-        hellofreshCode: String?,
         among savedRecipes: [SavedRecipeSnapshot]
     ) -> Bool {
         let normalizedTitle = RecipeNormalizer.normalizedKey(for: title)
         let normalizedSubtitle = RecipeNormalizer.normalizedKey(for: subtitle ?? "")
 
         return savedRecipes.contains { savedRecipe in
-            if let hellofreshCode, let savedCode = savedRecipe.hellofreshCode, savedCode == hellofreshCode {
+            if savedRecipe.normalizedTitle != normalizedTitle {
+                return false
+            }
+
+            if normalizedSubtitle.isEmpty {
                 return true
             }
 
-            if savedRecipe.normalizedTitle == normalizedTitle {
+            if savedRecipe.normalizedSubtitle.isEmpty
+                || savedRecipe.normalizedSubtitle == normalizedSubtitle {
                 return true
             }
 
-            if !normalizedSubtitle.isEmpty,
-               savedRecipe.normalizedTitle == normalizedTitle,
-               savedRecipe.normalizedSubtitle == normalizedSubtitle {
-                return true
+            let subtitleTokens = Set(RecipeNormalizer.normalizedTokens(for: normalizedSubtitle))
+            let savedSubtitleTokens = Set(RecipeNormalizer.normalizedTokens(for: savedRecipe.normalizedSubtitle))
+            guard !subtitleTokens.isEmpty, !savedSubtitleTokens.isEmpty else {
+                return false
             }
 
-            return false
+            let sharedSubtitleTokens = subtitleTokens.intersection(savedSubtitleTokens).count
+            let minimumExpectedOverlap = min(subtitleTokens.count, savedSubtitleTokens.count)
+
+            return sharedSubtitleTokens >= max(2, minimumExpectedOverlap - 1)
         }
     }
 
@@ -69,19 +51,7 @@ public enum DuplicateRecipeDetector {
             let sharedFrontRecognizedTextTokens = frontRecognizedTextTokens.intersection(detectedTokens).count
             let sharedBackRecognizedTextTokens = backRecognizedTextTokens.intersection(detectedTokens).count
             let hasStrongTitleSignal: Bool
-            let hasCodeSignal: Bool
             var score = 0
-
-            if let code = savedRecipe.hellofreshCode,
-               !code.isEmpty {
-                let normalizedCode = RecipeNormalizer.normalizedKey(for: code)
-                hasCodeSignal = normalizedDetectedText.contains(normalizedCode)
-                if hasCodeSignal {
-                    score += 14
-                }
-            } else {
-                hasCodeSignal = false
-            }
 
             if titleTokens.count >= 3, sharedTitleTokens >= titleTokens.count - 1 {
                 score += 10
@@ -132,16 +102,15 @@ public enum DuplicateRecipeDetector {
                 sharedTitleTokens,
                 sharedSubtitleTokens,
                 sharedFrontRecognizedTextTokens,
-                hasStrongTitleSignal,
-                hasCodeSignal
+                hasStrongTitleSignal
             )
         }
 
         guard
             let bestMatch = scoredMatches.max(by: { $0.1 < $1.1 }),
             bestMatch.1 >= 10,
-            bestMatch.5 || bestMatch.2 >= 2 || bestMatch.6,
-            bestMatch.2 + bestMatch.3 + bestMatch.4 >= 3 || bestMatch.6
+            bestMatch.5 || bestMatch.2 >= 2,
+            bestMatch.2 + bestMatch.3 + bestMatch.4 >= 3
         else {
             return nil
         }
